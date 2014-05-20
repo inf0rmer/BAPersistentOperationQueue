@@ -53,8 +53,6 @@
 		139E2C97192C120900DE1FD8 /* BAPersistentOperationQueueTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BAPersistentOperationQueueTests-Info.plist"; sourceTree = "<group>"; };
 		139E2C99192C120900DE1FD8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		139E2C9B192C120900DE1FD8 /* BAPersistentOperationQueueTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BAPersistentOperationQueueTests.m; sourceTree = "<group>"; };
-		139E2CA7192C125400DE1FD8 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
-		139E2CA9192C125400DE1FD8 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,7 +110,6 @@
 		139E2C81192C120900DE1FD8 /* BAPersistentOperationQueue */ = {
 			isa = PBXGroup;
 			children = (
-				139E2CA5192C125400DE1FD8 /* Classes */,
 				139E2C84192C120900DE1FD8 /* BAPersistentOperationQueue.h */,
 				139E2C86192C120900DE1FD8 /* BAPersistentOperationQueue.m */,
 				139E2C82192C120900DE1FD8 /* Supporting Files */,
@@ -144,31 +141,6 @@
 				139E2C98192C120900DE1FD8 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		139E2CA5192C125400DE1FD8 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				139E2CA6192C125400DE1FD8 /* ios */,
-				139E2CA8192C125400DE1FD8 /* osx */,
-			);
-			path = Classes;
-			sourceTree = "<group>";
-		};
-		139E2CA6192C125400DE1FD8 /* ios */ = {
-			isa = PBXGroup;
-			children = (
-				139E2CA7192C125400DE1FD8 /* .gitkeep */,
-			);
-			path = ios;
-			sourceTree = "<group>";
-		};
-		139E2CA8192C125400DE1FD8 /* osx */ = {
-			isa = PBXGroup;
-			children = (
-				139E2CA9192C125400DE1FD8 /* .gitkeep */,
-			);
-			path = osx;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
