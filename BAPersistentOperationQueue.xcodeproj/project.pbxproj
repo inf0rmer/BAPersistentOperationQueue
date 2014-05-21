@@ -16,6 +16,7 @@
 		139E2C94192C120900DE1FD8 /* libBAPersistentOperationQueue.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139E2C7C192C120900DE1FD8 /* libBAPersistentOperationQueue.a */; };
 		139E2C9A192C120900DE1FD8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 139E2C98192C120900DE1FD8 /* InfoPlist.strings */; };
 		139E2C9C192C120900DE1FD8 /* BAPersistentOperationQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E2C9B192C120900DE1FD8 /* BAPersistentOperationQueueTests.m */; };
+		13A18913192D0715003F4B55 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 13A18912192D0715003F4B55 /* libsqlite3.dylib */; };
 		AE688CC62CAE4FC3B2045177 /* libPods-BAPersistentOperationQueueTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DBBCA0B9BF448D19AAF3D9C /* libPods-BAPersistentOperationQueueTests.a */; };
 		FF391934069F435C9C965456 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E546935A3804BA39E3CE50D /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -56,6 +57,7 @@
 		139E2C97192C120900DE1FD8 /* BAPersistentOperationQueueTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BAPersistentOperationQueueTests-Info.plist"; sourceTree = "<group>"; };
 		139E2C99192C120900DE1FD8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		139E2C9B192C120900DE1FD8 /* BAPersistentOperationQueueTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BAPersistentOperationQueueTests.m; sourceTree = "<group>"; };
+		13A18912192D0715003F4B55 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		3C90455B3FE843338002223A /* Pods-BAPersistentOperationQueueTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BAPersistentOperationQueueTests.xcconfig"; path = "Pods/Pods-BAPersistentOperationQueueTests.xcconfig"; sourceTree = "<group>"; };
 		4E546935A3804BA39E3CE50D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DBBCA0B9BF448D19AAF3D9C /* libPods-BAPersistentOperationQueueTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BAPersistentOperationQueueTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13A18913192D0715003F4B55 /* libsqlite3.dylib in Frameworks */,
 				139E2C8E192C120900DE1FD8 /* XCTest.framework in Frameworks */,
 				139E2C91192C120900DE1FD8 /* UIKit.framework in Frameworks */,
 				139E2C8F192C120900DE1FD8 /* Foundation.framework in Frameworks */,
@@ -110,6 +113,7 @@
 		139E2C7E192C120900DE1FD8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				13A18912192D0715003F4B55 /* libsqlite3.dylib */,
 				139E2C7F192C120900DE1FD8 /* Foundation.framework */,
 				139E2C8D192C120900DE1FD8 /* XCTest.framework */,
 				139E2C90192C120900DE1FD8 /* UIKit.framework */,
