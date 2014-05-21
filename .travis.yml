@@ -1,0 +1,11 @@
+language: objective-c
+before_install:
+  - brew update
+  - brew unlink xctool
+  - brew install xctool
+  - gem install cocoapods
+script:
+  - xctool -workspace BAPersistentOperationQueue.xcworkspace -scheme BAPersistentOperationQueue -sdk iphonesimulator test
+branches:
+  only:
+    - master
