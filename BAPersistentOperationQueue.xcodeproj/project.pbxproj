@@ -16,6 +16,8 @@
 		139E2C94192C120900DE1FD8 /* libBAPersistentOperationQueue.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139E2C7C192C120900DE1FD8 /* libBAPersistentOperationQueue.a */; };
 		139E2C9A192C120900DE1FD8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 139E2C98192C120900DE1FD8 /* InfoPlist.strings */; };
 		139E2C9C192C120900DE1FD8 /* BAPersistentOperationQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E2C9B192C120900DE1FD8 /* BAPersistentOperationQueueTests.m */; };
+		AE688CC62CAE4FC3B2045177 /* libPods-BAPersistentOperationQueueTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DBBCA0B9BF448D19AAF3D9C /* libPods-BAPersistentOperationQueueTests.a */; };
+		FF391934069F435C9C965456 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E546935A3804BA39E3CE50D /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		116505AB30F5437795C1467E /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		139E2C7C192C120900DE1FD8 /* libBAPersistentOperationQueue.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBAPersistentOperationQueue.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		139E2C7F192C120900DE1FD8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		139E2C83192C120900DE1FD8 /* BAPersistentOperationQueue-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BAPersistentOperationQueue-Prefix.pch"; sourceTree = "<group>"; };
@@ -53,6 +56,9 @@
 		139E2C97192C120900DE1FD8 /* BAPersistentOperationQueueTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BAPersistentOperationQueueTests-Info.plist"; sourceTree = "<group>"; };
 		139E2C99192C120900DE1FD8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		139E2C9B192C120900DE1FD8 /* BAPersistentOperationQueueTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BAPersistentOperationQueueTests.m; sourceTree = "<group>"; };
+		3C90455B3FE843338002223A /* Pods-BAPersistentOperationQueueTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BAPersistentOperationQueueTests.xcconfig"; path = "Pods/Pods-BAPersistentOperationQueueTests.xcconfig"; sourceTree = "<group>"; };
+		4E546935A3804BA39E3CE50D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DBBCA0B9BF448D19AAF3D9C /* libPods-BAPersistentOperationQueueTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BAPersistentOperationQueueTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +67,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				139E2C80192C120900DE1FD8 /* Foundation.framework in Frameworks */,
+				FF391934069F435C9C965456 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +79,7 @@
 				139E2C91192C120900DE1FD8 /* UIKit.framework in Frameworks */,
 				139E2C8F192C120900DE1FD8 /* Foundation.framework in Frameworks */,
 				139E2C94192C120900DE1FD8 /* libBAPersistentOperationQueue.a in Frameworks */,
+				AE688CC62CAE4FC3B2045177 /* libPods-BAPersistentOperationQueueTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +93,8 @@
 				139E2C95192C120900DE1FD8 /* BAPersistentOperationQueueTests */,
 				139E2C7E192C120900DE1FD8 /* Frameworks */,
 				139E2C7D192C120900DE1FD8 /* Products */,
+				116505AB30F5437795C1467E /* Pods.xcconfig */,
+				3C90455B3FE843338002223A /* Pods-BAPersistentOperationQueueTests.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -103,6 +113,8 @@
 				139E2C7F192C120900DE1FD8 /* Foundation.framework */,
 				139E2C8D192C120900DE1FD8 /* XCTest.framework */,
 				139E2C90192C120900DE1FD8 /* UIKit.framework */,
+				4E546935A3804BA39E3CE50D /* libPods.a */,
+				5DBBCA0B9BF448D19AAF3D9C /* libPods-BAPersistentOperationQueueTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -150,9 +162,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 139E2C9F192C120900DE1FD8 /* Build configuration list for PBXNativeTarget "BAPersistentOperationQueue" */;
 			buildPhases = (
+				5875B86559D34ACCA7FA938A /* Check Pods Manifest.lock */,
 				139E2C78192C120900DE1FD8 /* Sources */,
 				139E2C79192C120900DE1FD8 /* Frameworks */,
 				139E2C7A192C120900DE1FD8 /* CopyFiles */,
+				A7C6BA146F7D4B958724B035 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -167,9 +181,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 139E2CA2192C120900DE1FD8 /* Build configuration list for PBXNativeTarget "BAPersistentOperationQueueTests" */;
 			buildPhases = (
+				AE962296208046C3AB1C3C43 /* Check Pods Manifest.lock */,
 				139E2C88192C120900DE1FD8 /* Sources */,
 				139E2C89192C120900DE1FD8 /* Frameworks */,
 				139E2C8A192C120900DE1FD8 /* Resources */,
+				2F0F1BBCDD9E4169BB778AB4 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -218,6 +234,69 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2F0F1BBCDD9E4169BB778AB4 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-BAPersistentOperationQueueTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5875B86559D34ACCA7FA938A /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		A7C6BA146F7D4B958724B035 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AE962296208046C3AB1C3C43 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		139E2C78192C120900DE1FD8 /* Sources */ = {
@@ -328,10 +407,12 @@
 		};
 		139E2CA0192C120900DE1FD8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 116505AB30F5437795C1467E /* Pods.xcconfig */;
 			buildSettings = {
 				DSTROOT = /tmp/BAPersistentOperationQueue.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BAPersistentOperationQueue/BAPersistentOperationQueue-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -340,10 +421,12 @@
 		};
 		139E2CA1192C120900DE1FD8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 116505AB30F5437795C1467E /* Pods.xcconfig */;
 			buildSettings = {
 				DSTROOT = /tmp/BAPersistentOperationQueue.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BAPersistentOperationQueue/BAPersistentOperationQueue-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -352,6 +435,7 @@
 		};
 		139E2CA3192C120900DE1FD8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C90455B3FE843338002223A /* Pods-BAPersistentOperationQueueTests.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -372,6 +456,7 @@
 		};
 		139E2CA4192C120900DE1FD8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C90455B3FE843338002223A /* Pods-BAPersistentOperationQueueTests.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
