@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		130AE067192D106100650D88 /* BAPersistentOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 130AE064192D106100650D88 /* BAPersistentOperation.m */; };
+		130AE06B192D107A00650D88 /* PersistentOperationQueueDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 130AE06A192D107A00650D88 /* PersistentOperationQueueDelegate.m */; };
+		130AE06E192D10B200650D88 /* BAPersistentOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 130AE06D192D10B200650D88 /* BAPersistentOperationQueue.m */; };
 		139E2C80192C120900DE1FD8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139E2C7F192C120900DE1FD8 /* Foundation.framework */; };
-		139E2C85192C120900DE1FD8 /* BAPersistentOperationQueue.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 139E2C84192C120900DE1FD8 /* BAPersistentOperationQueue.h */; };
-		139E2C87192C120900DE1FD8 /* BAPersistentOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E2C86192C120900DE1FD8 /* BAPersistentOperationQueue.m */; };
 		139E2C8E192C120900DE1FD8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139E2C8D192C120900DE1FD8 /* XCTest.framework */; };
 		139E2C8F192C120900DE1FD8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139E2C7F192C120900DE1FD8 /* Foundation.framework */; };
 		139E2C91192C120900DE1FD8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139E2C90192C120900DE1FD8 /* UIKit.framework */; };
@@ -38,7 +39,6 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				139E2C85192C120900DE1FD8 /* BAPersistentOperationQueue.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,11 +46,17 @@
 
 /* Begin PBXFileReference section */
 		116505AB30F5437795C1467E /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		130AE061192D106100650D88 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		130AE063192D106100650D88 /* BAPersistentOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAPersistentOperation.h; sourceTree = "<group>"; };
+		130AE064192D106100650D88 /* BAPersistentOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BAPersistentOperation.m; sourceTree = "<group>"; };
+		130AE066192D106100650D88 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		130AE069192D107A00650D88 /* PersistentOperationQueueDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistentOperationQueueDelegate.h; sourceTree = "<group>"; };
+		130AE06A192D107A00650D88 /* PersistentOperationQueueDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentOperationQueueDelegate.m; sourceTree = "<group>"; };
+		130AE06C192D10B200650D88 /* BAPersistentOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAPersistentOperationQueue.h; sourceTree = "<group>"; };
+		130AE06D192D10B200650D88 /* BAPersistentOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BAPersistentOperationQueue.m; sourceTree = "<group>"; };
 		139E2C7C192C120900DE1FD8 /* libBAPersistentOperationQueue.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBAPersistentOperationQueue.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		139E2C7F192C120900DE1FD8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		139E2C83192C120900DE1FD8 /* BAPersistentOperationQueue-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BAPersistentOperationQueue-Prefix.pch"; sourceTree = "<group>"; };
-		139E2C84192C120900DE1FD8 /* BAPersistentOperationQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BAPersistentOperationQueue.h; sourceTree = "<group>"; };
-		139E2C86192C120900DE1FD8 /* BAPersistentOperationQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BAPersistentOperationQueue.m; sourceTree = "<group>"; };
 		139E2C8C192C120900DE1FD8 /* BAPersistentOperationQueueTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BAPersistentOperationQueueTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		139E2C8D192C120900DE1FD8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		139E2C90192C120900DE1FD8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -89,6 +95,52 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		130AE05F192D106100650D88 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				130AE06C192D10B200650D88 /* BAPersistentOperationQueue.h */,
+				130AE06D192D10B200650D88 /* BAPersistentOperationQueue.m */,
+				130AE060192D106100650D88 /* ios */,
+				130AE062192D106100650D88 /* Models */,
+				130AE065192D106100650D88 /* osx */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		130AE060192D106100650D88 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				130AE061192D106100650D88 /* .gitkeep */,
+			);
+			path = ios;
+			sourceTree = "<group>";
+		};
+		130AE062192D106100650D88 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				130AE063192D106100650D88 /* BAPersistentOperation.h */,
+				130AE064192D106100650D88 /* BAPersistentOperation.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		130AE065192D106100650D88 /* osx */ = {
+			isa = PBXGroup;
+			children = (
+				130AE066192D106100650D88 /* .gitkeep */,
+			);
+			path = osx;
+			sourceTree = "<group>";
+		};
+		130AE068192D107A00650D88 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				130AE069192D107A00650D88 /* PersistentOperationQueueDelegate.h */,
+				130AE06A192D107A00650D88 /* PersistentOperationQueueDelegate.m */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
 		139E2C73192C120900DE1FD8 = {
 			isa = PBXGroup;
 			children = (
@@ -126,8 +178,7 @@
 		139E2C81192C120900DE1FD8 /* BAPersistentOperationQueue */ = {
 			isa = PBXGroup;
 			children = (
-				139E2C84192C120900DE1FD8 /* BAPersistentOperationQueue.h */,
-				139E2C86192C120900DE1FD8 /* BAPersistentOperationQueue.m */,
+				130AE05F192D106100650D88 /* Classes */,
 				139E2C82192C120900DE1FD8 /* Supporting Files */,
 			);
 			path = BAPersistentOperationQueue;
@@ -144,6 +195,7 @@
 		139E2C95192C120900DE1FD8 /* BAPersistentOperationQueueTests */ = {
 			isa = PBXGroup;
 			children = (
+				130AE068192D107A00650D88 /* Mocks */,
 				139E2C9B192C120900DE1FD8 /* BAPersistentOperationQueueTests.m */,
 				139E2C96192C120900DE1FD8 /* Supporting Files */,
 			);
@@ -307,7 +359,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				139E2C87192C120900DE1FD8 /* BAPersistentOperationQueue.m in Sources */,
+				130AE067192D106100650D88 /* BAPersistentOperation.m in Sources */,
+				130AE06E192D10B200650D88 /* BAPersistentOperationQueue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,6 +369,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				139E2C9C192C120900DE1FD8 /* BAPersistentOperationQueueTests.m in Sources */,
+				130AE06B192D107A00650D88 /* PersistentOperationQueueDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
