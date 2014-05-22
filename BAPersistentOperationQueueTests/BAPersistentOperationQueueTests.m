@@ -114,6 +114,22 @@ describe(@"BAPersistentOperationQueue", ^{
       [[theValue(queue.operationQueue.isSuspended) should] beTrue];
     });
   });
+  
+  describe(@"flush", ^{
+    beforeEach(^{
+      queue = [[BAPersistentOperationQueue alloc] init];
+      [queue insertObject:@{}];
+      [queue insertObject:@{}];
+      [queue insertObject:@{}];
+      [queue insertObject:@{}];
+      [queue startWorking];
+    });
+    
+    it(@"clears the queue", ^{
+      [queue flush];
+      [[expectFutureValue(theValue([queue.operations count])) shouldEventually] equal:theValue(0)];
+    });
+  });
 });
 
 SPEC_END
