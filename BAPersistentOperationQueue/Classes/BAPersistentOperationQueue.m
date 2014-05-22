@@ -31,6 +31,11 @@
   return self;
 }
 
+#pragma mark - Queue information
+- (NSArray *)operations {
+  return [_operationQueue operations];
+}
+
 #pragma mark - Queue management
 - (void)insertObject:(id)object
 {
@@ -57,7 +62,7 @@
 
 - (void)flush
 {
-
+  [_operationQueue cancelAllOperations];
 }
 
 #pragma mark - BAPersistentOperationDelegate

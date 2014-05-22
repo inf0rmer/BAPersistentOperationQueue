@@ -25,6 +25,9 @@
 #pragma mark - Initialization
 - (instancetype)init;
 
+#pragma mark - Queue information
+- (NSArray *)operations;
+
 #pragma mark - Queue management
 - (void)insertObject:(id)object;
 - (void)startWorking;
