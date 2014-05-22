@@ -7,6 +7,7 @@
 //
 
 #import <Kiwi/Kiwi.h>
+#import <ObjectiveSugar/ObjectiveSugar.h>
 #import "BAPersistentOperationQueue.h"
 #import "PersistentOperationQueueDelegate.h"
 
@@ -40,6 +41,29 @@ describe(@"BAPersistentOperationQueue", ^{
     
     it(@"begins in a suspended state", ^{
       [[theValue(queue.operationQueue.isSuspended) should] beTrue];
+    });
+    
+    it(@"generates a unique ID", ^{
+      [[theValue([queue._id containsString:@"BAPersistentOperationQueue_"]) should] beTrue];
+    });
+    
+    describe(@"#initWithDatabasePath", ^{
+      __block NSString *path = @"/tmp/tmp.db";
+      
+      beforeEach(^{
+        queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:path];
+      });
+      
+      afterEach(^{
+        NSFileManager *fm = [NSFileManager defaultManager];
+        NSError *error;
+        [fm removeItemAtPath:path error:&error];
+      });
+      
+      it(@"creates a database at the specified path", ^{
+        NSFileManager *fm = [NSFileManager defaultManager];
+        [[theValue([fm fileExistsAtPath:path]) should] beTrue];
+      });
     });
   });
   

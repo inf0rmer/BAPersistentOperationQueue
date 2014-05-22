@@ -7,13 +7,18 @@
 //
 
 #import "BAPersistentOperationQueue.h"
+#import <FMDB/FMDatabaseQueue.h>
+#import <FMDB/FMDatabase.h>
 #import <ObjectiveSugar/ObjectiveSugar.h>
 
 @interface BAPersistentOperationQueue ()
 
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
+@property (nonatomic, strong) FMDatabaseQueue *databaseQueue;
 
 @end
+
+static int cid = 0;
 
 @implementation BAPersistentOperationQueue
 
@@ -22,10 +27,30 @@
 - (instancetype)init
 {
   if (self = [super init]) {
+    // Generate unique ID
+    __id = [NSString stringWithFormat:@"BAPersistentOperationQueue_%ld", (long)cid];
+    cid++;
+    
+    // Create operation queue
     _operationQueue = [[NSOperationQueue alloc] init];
     // Ensures FIFO
     _operationQueue.maxConcurrentOperationCount = 1;
     [self stopWorking];
+  }
+  
+  return self;
+}
+
+- (instancetype)initWithDatabasePath:(NSString *)path
+{
+  if (self = [self init]) {
+    _databaseQueue = [FMDatabaseQueue databaseQueueWithPath:path];
+    
+    // Create initial schema
+    [_databaseQueue inDatabase:^(FMDatabase *db) {
+      BOOL succeeded = [db executeUpdate:[self sqlForCreatingDBSchema]];
+      NSAssert(succeeded, ([NSString stringWithFormat:@"Failed to create a storage table for %@", __id]));
+    }];
   }
   
   return self;
@@ -85,6 +110,11 @@
   }] firstObject];
   
   return operation;
+}
+
+- (NSString *)sqlForCreatingDBSchema
+{
+  return [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (timestamp INTEGER PRIMARY KEY ASC, data TEXT);", __id];
 }
 
 @end
