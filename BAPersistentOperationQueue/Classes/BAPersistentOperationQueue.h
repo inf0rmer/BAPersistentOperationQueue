@@ -13,13 +13,13 @@
 @protocol BAPersistentOperationQueueDelegate
 
 @required - (NSDictionary *)persistentOperationQueueSerializeObject:(id)object;
-@required - (void)persistentOperationQueueReceivedObject:(id)object;
+@required - (void)persistentOperationQueueReceivedOperation:(BAPersistentOperation *)operation;
 
 @end
 
-@interface BAPersistentOperationQueue : NSObject
+@interface BAPersistentOperationQueue : NSObject <BAPersistentOperationDelegate>
 
-@property (nonatomic, strong) NSOperationQueue *operationQueue;
+@property (nonatomic, assign) BOOL suspended;
 @property (nonatomic, weak) id <BAPersistentOperationQueueDelegate> delegate;
 
 #pragma mark - Initialization
@@ -27,5 +27,8 @@
 
 #pragma mark - Queue management
 - (void)insertObject:(id)object;
+- (void)startWorking;
+- (void)stopWorking;
+- (void)flush;
 
 @end

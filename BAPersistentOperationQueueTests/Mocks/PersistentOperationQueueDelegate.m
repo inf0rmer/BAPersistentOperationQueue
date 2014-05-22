@@ -15,15 +15,12 @@
 {
   object = (NSDictionary *)object;
   
-  return @{
-           @"foo": object[@"foo"],
-           @"bar": object[@"bar"]
-           };
+  return object;
 }
 
-- (void)persistentOperationQueueReceivedObject:(id)object
+- (void)persistentOperationQueueReceivedOperation:(BAPersistentOperation *)operation
 {
-  
+
 }
 
 @end

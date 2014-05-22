@@ -9,13 +9,16 @@ PODS:
   - Kiwi/XCTest (2.2.4):
     - Kiwi/ARC
     - Kiwi/NonARC
+  - ObjectiveSugar (1.1.0)
 
 DEPENDENCIES:
   - FMDB
   - Kiwi/XCTest
+  - ObjectiveSugar
 
 SPEC CHECKSUMS:
   FMDB: 31ec26773c7f7b7890a6038235a1f2bbd933a7cb
   Kiwi: c73667f2b84cbf36f1a3830267c5a4ae8dcbd8ba
+  ObjectiveSugar: f48793f5902c77cfc02a4ce46d2e8ecddcad4dc2
 
-COCOAPODS: 0.33.0
+COCOAPODS: 0.33.1
