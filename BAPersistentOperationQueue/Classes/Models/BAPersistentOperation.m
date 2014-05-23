@@ -16,19 +16,9 @@
                           andData:(NSDictionary *)data
 {
   if (self = [super init]) {
-    _timestamp = timestamp;
-    
-    if (!_timestamp) {
-      _timestamp = (NSInteger)[[NSDate date] timeIntervalSince1970];
-    }
-    
-    _data = data;
-    
-    if (!_data) {
-      _data = [[NSDictionary alloc] init];
-    }
-    
-    _finished = NO;
+    self.timestamp = timestamp;
+    self.data = data;
+    self.finished = NO;
   }
   
   return self;
@@ -59,6 +49,25 @@
       [self.delegate persistentOperationFinishedWithTimestamp:self.timestamp];
     }
   }
+}
+
+#pragma mark - Custom setters
+- (void)setData:(NSDictionary *)data
+{
+  if (!data) {
+    data = [[NSDictionary alloc] init];
+  }
+  
+  _data= data;
+}
+
+- (void)setTimestamp:(NSUInteger)timestamp
+{
+  if (!timestamp) {
+    timestamp = (NSInteger)[[NSDate date] timeIntervalSince1970];
+  }
+  
+  _timestamp = timestamp;
 }
 
 @end
