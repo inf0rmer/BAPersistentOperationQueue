@@ -10,6 +10,7 @@
 #import <FMDB/FMDatabaseQueue.h>
 #import <FMDB/FMDatabase.h>
 #import <ObjectiveSugar/ObjectiveSugar.h>
+#import <KVOController/FBKVOController.h>
 
 @interface BAPersistentOperationQueue ()
 
@@ -20,7 +21,9 @@
 
 static int cid = 0;
 
-@implementation BAPersistentOperationQueue
+@implementation BAPersistentOperationQueue {
+  FBKVOController *_KVOController;
+}
 
 #pragma mark - Initialization
 
@@ -36,6 +39,9 @@ static int cid = 0;
     // Ensures FIFO
     _operationQueue.maxConcurrentOperationCount = 1;
     [self stopWorking];
+    
+    // Setup KVO
+    [self setupKVO];
   }
   
   return self;
@@ -102,7 +108,30 @@ static int cid = 0;
   
 }
 
+#pragma mark - Database
+- (void)insertOperationInDatabase:(BAPersistentOperation *)operation
+{
+  if (_databaseQueue == nil) {
+    return;
+  }
+  
+  [_databaseQueue inDatabase:^(FMDatabase *db) {
+    NSString *data = [self JSONStringFromDictionary:operation.data];
+    NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:operation.timestamp], @"timestamp", data, @"data", nil];
+    [db executeUpdate:[self sqlForInsertingOperation], args];
+  }];
+}
+
 #pragma mark - Helpers
+- (void)setupKVO
+{
+  _KVOController = [FBKVOController controllerWithObserver:self];
+  [_KVOController observe:_operationQueue keyPath:@"operations" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+    BAPersistentOperation *operation = (BAPersistentOperation *)[change[NSKeyValueChangeNewKey] firstObject];
+    [self insertOperationInDatabase:operation];
+  }];
+}
+
 - (BAPersistentOperation *)operationFromTimestamp:(NSUInteger)timestamp
 {
   BAPersistentOperation *operation = [[_operationQueue.operations select:^BOOL(BAPersistentOperation *operation) {
@@ -115,6 +144,26 @@ static int cid = 0;
 - (NSString *)sqlForCreatingDBSchema
 {
   return [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (timestamp INTEGER PRIMARY KEY ASC, data TEXT);", __id];
+}
+
+- (NSString *)sqlForInsertingOperation
+{
+  return [NSString stringWithFormat:@"INSERT INTO %@ VALUES (:timestamp, :data)", __id];
+}
+
+- (NSString *)JSONStringFromDictionary:(NSDictionary *)dictionary
+{
+  NSError *error;
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                     options:0
+                                                       error:&error];
+  
+  unless(jsonData) {
+    return @"{}";
+  } else {
+    return [[NSString alloc] initWithData:jsonData
+                                 encoding:NSUTF8StringEncoding];
+  }
 }
 
 @end
