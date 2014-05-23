@@ -36,6 +36,12 @@ describe(@"BAPersistentOperationQueue", ^{
     queue.delegate = mockDelegate;
   });
   
+  afterEach(^{
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *error;
+    [fm removeItemAtPath:databasePath error:&error];
+  });
+  
   context(@"When initializing", ^{
     it(@"instantiates an NSOperationQueue", ^{
       [[queue.operationQueue shouldNot] beNil];
@@ -59,12 +65,6 @@ describe(@"BAPersistentOperationQueue", ^{
         queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
       });
       
-      afterEach(^{
-        NSFileManager *fm = [NSFileManager defaultManager];
-        NSError *error;
-        [fm removeItemAtPath:databasePath error:&error];
-      });
-      
       it(@"creates a database at the specified path", ^{
         NSFileManager *fm = [NSFileManager defaultManager];
         [[theValue([fm fileExistsAtPath:databasePath]) should] beTrue];
@@ -76,16 +76,26 @@ describe(@"BAPersistentOperationQueue", ^{
     __block BAPersistentOperationQueue *queue = nil;
     __block id dbMock = [FMDatabase nullMock];
     
-    beforeEach(^{
-      queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
-      queue.delegate = mockDelegate;
+    beforeEach(^{      
+      id databaseQueueMock = [FMDatabaseQueue mock];
       
-      [queue.databaseQueue stub:@selector(inDatabase:) withBlock:^id(NSArray *params) {
+      [FMDatabaseQueue stub:@selector(databaseQueueWithPath:) andReturn:databaseQueueMock];
+      
+      [databaseQueueMock stub:@selector(inDatabase:) withBlock:^id(NSArray *params) {
         void (^block)(FMDatabase *db) = params[0];
         block(dbMock);
-
+        
         return nil;
       }];
+      
+      FMResultSet *resultSet = [[FMResultSet alloc] init];
+      [resultSet stub:@selector(next) andReturn:theValue(YES)];
+      
+      [dbMock stub:@selector(executeUpdate:) andReturn:theValue(YES)];
+      [dbMock stub:@selector(executeQuery:) andReturn:resultSet];
+      
+      queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
+      queue.delegate = mockDelegate;
     });
     
     it(@"serializes the object to a NSDictionary through a delegate method", ^{
@@ -100,6 +110,41 @@ describe(@"BAPersistentOperationQueue", ^{
       NSString *insertStatement = [NSString stringWithFormat:@"INSERT INTO %@ VALUES (:timestamp, :data)", queue._id];
       [[dbMock should] receive:@selector(executeUpdate:) withArguments:insertStatement];
       [queue insertObject:@{}];
+    });
+    
+    context(@"When the object is already in the database", ^{
+      __block BAPersistentOperation *operation;
+      
+      beforeEach(^{
+        operation = [[BAPersistentOperation alloc] initWithTimestamp:1000
+                                                             andData:@{@"foo": @"bar"}];
+        
+        id databaseQueueMock = [FMDatabaseQueue mock];
+        
+        [FMDatabaseQueue stub:@selector(databaseQueueWithPath:) andReturn:databaseQueueMock];
+        
+        [databaseQueueMock stub:@selector(inDatabase:) withBlock:^id(NSArray *params) {
+          void (^block)(FMDatabase *db) = params[0];
+          block(dbMock);
+          
+          return nil;
+        }];
+        
+        FMResultSet *resultSet = [[FMResultSet alloc] init];
+        [resultSet stub:@selector(next) andReturn:theValue(NO)];
+        
+        [dbMock stub:@selector(executeUpdate:) andReturn:theValue(YES)];
+        [dbMock stub:@selector(executeQuery:) andReturn:resultSet];
+        
+        queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
+      });
+      
+      it(@"does not insert it to the database", ^{
+        NSString *insertStatement = [NSString stringWithFormat:@"INSERT INTO %@ VALUES (:timestamp, :data)", queue._id];
+        [[dbMock shouldNot] receive:@selector(executeUpdate:) withArguments:insertStatement];
+        
+        [queue insertOperationInDatabase:operation];
+      });
     });
   });
   
@@ -151,6 +196,11 @@ describe(@"BAPersistentOperationQueue", ^{
       [queue startWorking];
       [[expectFutureValue(returnedData) shouldEventually] equal:data2];
     });
+    
+    it(@"tries loading from the database", ^{
+      [[queue should] receive:@selector(loadOperationsFromDatabase)];
+      [queue startWorking];
+    });
   });
   
   describe(@"#stopWorking", ^{
@@ -178,6 +228,72 @@ describe(@"BAPersistentOperationQueue", ^{
     it(@"clears the queue", ^{
       [queue flush];
       [[expectFutureValue(theValue([queue.operations count])) shouldEventually] equal:theValue(0)];
+    });
+  });
+  
+  describe(@"#loadOperationsFromDatabase", ^{
+    __block id dbMock = [FMDatabase nullMock];
+    
+    beforeEach(^{
+      id databaseQueueMock = [FMDatabaseQueue mock];
+      
+      [FMDatabaseQueue stub:@selector(databaseQueueWithPath:) andReturn:databaseQueueMock];
+      
+      [databaseQueueMock stub:@selector(inDatabase:) withBlock:^id(NSArray *params) {
+        void (^block)(FMDatabase *db) = params[0];
+        block(dbMock);
+        
+        return nil;
+      }];
+      
+      FMResultSet *resultSet = [[FMResultSet alloc] init];
+      
+      __block int fetchedCount = 0;
+      [resultSet stub:@selector(intForColumn:) andReturn:theValue(1000)];
+      [resultSet stub:@selector(stringForColumn:) andReturn:@"{\"foo\": \"someData\"}"];
+      [resultSet stub:@selector(next) withBlock:^id(NSArray *params) {
+        fetchedCount++;
+        
+        return theValue((fetchedCount <= 1));
+      }];
+      
+      [dbMock stub:@selector(executeUpdate:) andReturn:theValue(YES)];
+      [dbMock stub:@selector(executeQuery:) andReturn:resultSet];
+      
+      queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
+      [queue.operationQueue stub:@selector(operationCount) andReturn:theValue(1)];
+    });
+    
+    it(@"Tries to load additional content from the database", ^{
+      [[dbMock shouldEventually] receive:@selector(executeQuery:)
+                 withArguments:[NSString stringWithFormat:@"SELECT * FROM %@", queue._id]];
+
+      [queue loadOperationsFromDatabase];
+    });
+    
+    it(@"Adds a retrieved operation from the DB to the queue", ^{
+      KWCaptureSpy *spy = [queue.operationQueue captureArgument:@selector(addOperation:)
+                                                        atIndex:0];
+      
+      [queue loadOperationsFromDatabase];
+      
+      BAPersistentOperation *operation = spy.argument;
+      [[theValue(operation.timestamp) shouldEventually] equal:theValue(1000)];
+      [[operation.data shouldEventually] equal:@{@"foo": @"someData"}];
+    });
+  });
+  
+  context(@"When queue is empty", ^{
+    beforeEach(^{
+      queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
+      [queue.operationQueue stub:@selector(operationCount) andReturn:theValue(0)];
+    });
+    
+    it(@"tries loading from the database", ^{
+      [[queue shouldEventually] receive:@selector(loadOperationsFromDatabase)];
+      
+      [queue startWorking];
+      [queue flush];
     });
   });
 });

@@ -39,9 +39,6 @@ static int cid = 0;
     // Ensures FIFO
     _operationQueue.maxConcurrentOperationCount = 1;
     [self stopWorking];
-    
-    // Setup KVO
-    [self setupKVO];
   }
   
   return self;
@@ -57,6 +54,9 @@ static int cid = 0;
       BOOL succeeded = [db executeUpdate:[self sqlForCreatingDBSchema]];
       NSAssert(succeeded, ([NSString stringWithFormat:@"Failed to create a storage table for %@", __id]));
     }];
+    
+    // Setup KVO
+    [self setupKVO];
   }
   
   return self;
@@ -83,6 +83,8 @@ static int cid = 0;
 {
   [_operationQueue setSuspended:NO];
   self.suspended = NO;
+  
+  [self loadOperationsFromDatabase];
 }
 
 - (void)stopWorking
@@ -116,9 +118,39 @@ static int cid = 0;
   }
   
   [_databaseQueue inDatabase:^(FMDatabase *db) {
-    NSString *data = [self JSONStringFromDictionary:operation.data];
-    NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:operation.timestamp], @"timestamp", data, @"data", nil];
-    [db executeUpdate:[self sqlForInsertingOperation], args];
+    FMResultSet *s = [db executeQuery:[self sqlForCheckingIfOperationExists], operation.timestamp];
+    
+    if ([s next]) {
+      NSString *data = [self JSONStringFromDictionary:operation.data];
+      NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:operation.timestamp], @"timestamp", data, @"data", nil];
+      [db executeUpdate:[self sqlForInsertingOperation], args];
+    }
+  }];
+}
+
+- (void)loadOperationsFromDatabase
+{
+  if (_databaseQueue == nil) {
+    return;
+  }
+  
+  [_databaseQueue inDatabase:^(FMDatabase *db) {
+    NSString *sql = [self sqlForFetchOperation];
+    FMResultSet *results = [db executeQuery:sql];
+    
+    while ([results next]) {
+      NSInteger timestamp = [results intForColumn:@"timestamp"];
+      NSString *json = [results stringForColumn:@"data"];
+      NSData *jsonData = [json dataUsingEncoding:NSUTF8StringEncoding];
+      NSDictionary *data = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                           options:0
+                                                             error:nil];
+      
+      BAPersistentOperation *operation = [[BAPersistentOperation alloc] initWithTimestamp:timestamp
+                                                                                  andData:data];
+      
+      [_operationQueue addOperation:operation];
+    }
   }];
 }
 
@@ -126,10 +158,19 @@ static int cid = 0;
 - (void)setupKVO
 {
   _KVOController = [FBKVOController controllerWithObserver:self];
-  [_KVOController observe:_operationQueue keyPath:@"operations" options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-    BAPersistentOperation *operation = (BAPersistentOperation *)[change[NSKeyValueChangeNewKey] firstObject];
-    [self insertOperationInDatabase:operation];
-  }];
+  
+  [_KVOController observe:_operationQueue keyPath:@"operations" options:NSKeyValueObservingOptionNew
+                    block:^(id observer, id object, NSDictionary *change) {
+                      if ([_operationQueue operationCount] == 0) {
+                        [self loadOperationsFromDatabase];
+                      }
+                      
+                      BAPersistentOperation *operation = (BAPersistentOperation *)[change[NSKeyValueChangeNewKey] firstObject];
+                      
+                      if (operation) {
+                        [self insertOperationInDatabase:operation];
+                      }
+                    }];
 }
 
 - (BAPersistentOperation *)operationFromTimestamp:(NSUInteger)timestamp
@@ -149,6 +190,16 @@ static int cid = 0;
 - (NSString *)sqlForInsertingOperation
 {
   return [NSString stringWithFormat:@"INSERT INTO %@ VALUES (:timestamp, :data)", __id];
+}
+
+- (NSString *)sqlForFetchOperation
+{
+  return [NSString stringWithFormat:@"SELECT * FROM %@", __id];
+}
+
+- (NSString *)sqlForCheckingIfOperationExists
+{
+  return [NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE timestamp = ?", __id];
 }
 
 - (NSString *)JSONStringFromDictionary:(NSDictionary *)dictionary
