@@ -35,4 +35,7 @@
 - (void)stopWorking;
 - (void)flush;
 
+#pragma mark - Database
+- (void)loadOperationsFromDatabase;
+
 @end
