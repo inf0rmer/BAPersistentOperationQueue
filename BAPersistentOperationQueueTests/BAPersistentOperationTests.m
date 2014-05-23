@@ -24,8 +24,31 @@ describe(@"BAPersistentOperation", ^{
       [[theValue(operation.timestamp) should] equal:theValue(200)];
     });
     
+    context(@"when timestamp is nil", ^{
+      beforeEach(^{
+        operation = [[BAPersistentOperation alloc] initWithTimestamp:(NSInteger)nil
+                                                             andData:@{@"foo": @"bar"}];
+      });
+      
+      it(@"uses the current timestamp", ^{
+        NSInteger timestamp = (NSInteger)[[NSDate date] timeIntervalSince1970];
+        [[theValue(operation.timestamp) should] equal:theValue(timestamp)];
+      });
+    });
+    
     it(@"sets #data", ^{
       [[operation.data should] equal:@{@"foo": @"bar"}];
+    });
+    
+    context(@"when data is nil", ^{
+      beforeEach(^{
+        operation = [[BAPersistentOperation alloc] initWithTimestamp:500
+                                                             andData:nil];
+      });
+      
+      it(@"sets an empty dictionary", ^{
+        [[operation.data should] equal:@{}];
+      });
     });
     
     it(@"sets #finished", ^{

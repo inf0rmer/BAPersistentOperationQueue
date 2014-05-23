@@ -21,9 +21,10 @@
 
 @property (nonatomic, assign) BOOL suspended;
 @property (nonatomic, weak) id <BAPersistentOperationQueueDelegate> delegate;
+@property (nonatomic, strong) NSString *_id;
 
 #pragma mark - Initialization
-- (instancetype)init;
+- (instancetype)initWithDatabasePath:(NSString *)path;
 
 #pragma mark - Queue information
 - (NSArray *)operations;

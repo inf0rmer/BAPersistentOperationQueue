@@ -17,7 +17,17 @@
 {
   if (self = [super init]) {
     _timestamp = timestamp;
+    
+    if (!_timestamp) {
+      _timestamp = (NSInteger)[[NSDate date] timeIntervalSince1970];
+    }
+    
     _data = data;
+    
+    if (!_data) {
+      _data = [[NSDictionary alloc] init];
+    }
+    
     _finished = NO;
   }
   

@@ -7,12 +7,18 @@
 //
 
 #import <Kiwi/Kiwi.h>
+#import <ObjectiveSugar/ObjectiveSugar.h>
+#import <FMDB/FMDatabaseQueue.h>
+#import <FMDB/FMDatabase.h>
 #import "BAPersistentOperationQueue.h"
 #import "PersistentOperationQueueDelegate.h"
 
 @interface BAPersistentOperationQueue ()
 
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
+@property (nonatomic, strong) FMDatabaseQueue *databaseQueue;
+
+- (void)insertOperationInDatabase:(BAPersistentOperation *)operation;
 
 @end
 
@@ -22,6 +28,8 @@ describe(@"BAPersistentOperationQueue", ^{
   
   __block BAPersistentOperationQueue *queue;
   __block PersistentOperationQueueDelegate *mockDelegate;
+  __block NSString *databasePath = @"/tmp/tmp.db";
+  
   beforeEach(^{
     queue = [[BAPersistentOperationQueue alloc] init];
     mockDelegate = [[PersistentOperationQueueDelegate alloc] init];
@@ -41,15 +49,57 @@ describe(@"BAPersistentOperationQueue", ^{
     it(@"begins in a suspended state", ^{
       [[theValue(queue.operationQueue.isSuspended) should] beTrue];
     });
+    
+    it(@"generates a unique ID", ^{
+      [[theValue([queue._id containsString:@"BAPersistentOperationQueue_"]) should] beTrue];
+    });
+    
+    describe(@"#initWithDatabasePath", ^{
+      beforeEach(^{
+        queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
+      });
+      
+      afterEach(^{
+        NSFileManager *fm = [NSFileManager defaultManager];
+        NSError *error;
+        [fm removeItemAtPath:databasePath error:&error];
+      });
+      
+      it(@"creates a database at the specified path", ^{
+        NSFileManager *fm = [NSFileManager defaultManager];
+        [[theValue([fm fileExistsAtPath:databasePath]) should] beTrue];
+      });
+    });
   });
   
   describe(@"#insertObject", ^{
+    __block BAPersistentOperationQueue *queue = nil;
+    __block id dbMock = [FMDatabase nullMock];
+    
+    beforeEach(^{
+      queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
+      queue.delegate = mockDelegate;
+      
+      [queue.databaseQueue stub:@selector(inDatabase:) withBlock:^id(NSArray *params) {
+        void (^block)(FMDatabase *db) = params[0];
+        block(dbMock);
+
+        return nil;
+      }];
+    });
+    
     it(@"serializes the object to a NSDictionary through a delegate method", ^{
       NSDictionary *object = @{};
       [[mockDelegate should] receive:@selector(persistentOperationQueueSerializeObject:)
                          withArguments:object];
       
       [queue insertObject:object];
+    });
+    
+    it(@"inserts the object in the database", ^{
+      NSString *insertStatement = [NSString stringWithFormat:@"INSERT INTO %@ VALUES (:timestamp, :data)", queue._id];
+      [[dbMock should] receive:@selector(executeUpdate:) withArguments:insertStatement];
+      [queue insertObject:@{}];
     });
   });
   
