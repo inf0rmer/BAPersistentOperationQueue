@@ -104,8 +104,7 @@ static int cid = 0;
 
 - (void)persistentOperationFinishedWithTimestamp:(NSUInteger)timestamp
 {
-  BAPersistentOperation *operation = [self operationFromTimestamp:timestamp];
-  [self deleteOperationFromDatabase:operation];
+  [self deleteOperationFromDatabaseWithTimestamp:timestamp];
 }
 
 #pragma mark - Database
@@ -127,17 +126,17 @@ static int cid = 0;
   }];
 }
 
-- (void)deleteOperationFromDatabase:(BAPersistentOperation *)operation
+- (void)deleteOperationFromDatabaseWithTimestamp:(NSUInteger)timestamp
 {
-  if (_databaseQueue == nil || !operation) {
+  if (_databaseQueue == nil || !timestamp) {
     return;
   }
   
   [_databaseQueue inDatabase:^(FMDatabase *db) {
-    NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:operation.timestamp], @"timestamp", nil];
-    [db executeUpdate:[self sqlForDeletingOperationWithTimestamp], args];
-    
-    [db close];
+    if ([db open]) {
+      [db executeUpdate:[self sqlForDeletingOperationWithTimestamp], [NSNumber numberWithInteger:timestamp]];
+      [db close];
+    }
   }];
 }
 
