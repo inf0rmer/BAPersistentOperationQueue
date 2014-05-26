@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BARequest.h"
 
-@interface BAViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface BAViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, BARequestDelegate>
 
 @property (nonatomic, weak) IBOutlet UIButton *stateButton;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;

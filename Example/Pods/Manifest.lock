@@ -2,11 +2,11 @@ PODS:
   - BAPersistentOperationQueue (0.1.0)
 
 DEPENDENCIES:
-  - BAPersistentOperationQueue (from `../../`)
+  - BAPersistentOperationQueue (from `../`)
 
 EXTERNAL SOURCES:
   BAPersistentOperationQueue:
-    :path: ../../
+    :path: ../
 
 SPEC CHECKSUMS:
   BAPersistentOperationQueue: a759ce0d4ba66f8a1a9a964b36afacb76189396d

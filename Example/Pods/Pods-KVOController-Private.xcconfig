@@ -1,0 +1,5 @@
+#include "Pods-KVOController.xcconfig"
+GCC_PREPROCESSOR_DEFINITIONS = COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/KVOController" "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/BAPersistentOperationQueue" "${PODS_ROOT}/Headers/KVOController"
+OTHER_LDFLAGS = -ObjC
+PODS_ROOT = ${SRCROOT}

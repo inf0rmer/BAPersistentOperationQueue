@@ -49,7 +49,15 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-  cell.textLabel.text = @"Request";
+  
+  BARequest *request = requests[indexPath.row];
+  
+  if (cell == nil) {
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
+  }
+
+  cell.textLabel.text = request.name;
+  cell.detailTextLabel.text = (request.finished) ? @"Finished!" : (request.performing) ? @"Working..." : @"Stopped";
   
   return cell;
 }
@@ -59,6 +67,26 @@
 {
   _online = !_online;
   [self updateStateButton];
+  [self.tableView reloadData];
+}
+
+- (IBAction)addRequest:(id)sender
+{
+  BARequest *request = [[BARequest alloc] initWithName:[NSString stringWithFormat:@"Request %d", requests.count+1]];
+  request.delegate = self;
+  
+  if (_online) {
+    [request perform];
+  }
+  
+  [requests addObject:request];
+  [self.tableView reloadData];
+}
+
+#pragma mark - BARequestDelegate
+- (void)BARequestDidFinish:(BARequest *)request
+{
+  [self.tableView reloadData];
 }
 
 #pragma mark - Helpers
