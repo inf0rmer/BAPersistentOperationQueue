@@ -18,7 +18,7 @@
   return object;
 }
 
-- (void)persistentOperationQueueReceivedOperation:(BAPersistentOperation *)operation
+- (void)persistentOperationQueueStartedOperation:(BAPersistentOperation *)operation
 {
 
 }

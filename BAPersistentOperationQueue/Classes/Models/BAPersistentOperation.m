@@ -33,7 +33,7 @@
   [self didChangeValueForKey:@"isExecuting"];
   
   dispatch_async(dispatch_get_main_queue(), ^{
-    [self.delegate persistentOperationStartedWithTimestamp:self.timestamp];
+    [self.delegate persistentOperationStarted:self];
   });
 }
 
@@ -62,7 +62,7 @@
   [self didChangeValueForKey:@"isFinished"];
   
   dispatch_async(dispatch_get_main_queue(), ^{
-    [self.delegate persistentOperationFinishedWithTimestamp:self.timestamp];
+    [self.delegate persistentOperationFinished:self];
   });
 }
 
