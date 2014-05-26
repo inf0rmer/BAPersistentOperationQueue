@@ -273,7 +273,6 @@ describe(@"BAPersistentOperationQueue", ^{
       FMResultSet *resultSet = [[FMResultSet alloc] init];
       
       __block int fetchedCount = 0;
-      [resultSet stub:@selector(intForColumn:) andReturn:theValue(1000)];
       [resultSet stub:@selector(stringForColumn:) andReturn:@"{\"foo\": \"someData\"}"];
       [resultSet stub:@selector(next) withBlock:^id(NSArray *params) {
         fetchedCount++;
@@ -303,7 +302,6 @@ describe(@"BAPersistentOperationQueue", ^{
       [queue loadOperationsFromDatabase];
       
       BAPersistentOperation *operation = spy.argument;
-      [[theValue(operation.timestamp) shouldEventually] equal:theValue(1000)];
       [[operation.data shouldEventually] equal:@{@"foo": @"someData"}];
     });
   });
