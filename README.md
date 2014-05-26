@@ -2,6 +2,7 @@
 
 A persistent operation queue that uses a database to save operations that need to be completed at a later time.
 
+[![Build Status](https://travis-ci.org/inf0rmer/BAPersistentOperationQueue.svg?branch=master)](https://travis-ci.org/inf0rmer/BAPersistentOperationQueue)
 [![Version](http://cocoapod-badges.herokuapp.com/v/BAPersistentOperationQueue/badge.png)](http://cocoadocs.org/docsets/BAPersistentOperationQueue)
 [![Platform](http://cocoapod-badges.herokuapp.com/p/BAPersistentOperationQueue/badge.png)](http://cocoadocs.org/docsets/BAPersistentOperationQueue)
 
