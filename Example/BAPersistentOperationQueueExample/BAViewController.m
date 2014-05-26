@@ -82,7 +82,7 @@
   return data;
 }
 
-- (void)persistentOperationQueueReceivedOperation:(BAPersistentOperation *)operation
+- (void)persistentOperationQueueStartedOperation:(BAPersistentOperation *)operation
 {
   // Transform the operation back into a request if it's not already in the table.
   // operation.data holds the previously serialized data structure

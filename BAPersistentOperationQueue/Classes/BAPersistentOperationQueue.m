@@ -79,7 +79,7 @@ static int cid = 0;
 - (void)startWorking
 {
   [_operationQueue setSuspended:NO];
-  self.suspended = NO;
+  _suspended = NO;
   
   [self loadOperationsFromDatabase];
 }
@@ -87,7 +87,7 @@ static int cid = 0;
 - (void)stopWorking
 {
   [_operationQueue setSuspended:YES];
-  self.suspended = YES;
+  _suspended = YES;
 }
 
 - (void)flush
@@ -96,15 +96,14 @@ static int cid = 0;
 }
 
 #pragma mark - BAPersistentOperationDelegate
-- (void)persistentOperationStartedWithTimestamp:(NSUInteger)timestamp
+- (void)persistentOperationStarted:(BAPersistentOperation *)operation
 {
-  BAPersistentOperation *operation = [self operationFromTimestamp:timestamp];
-  [self.delegate persistentOperationQueueReceivedOperation:operation];
+  [self.delegate persistentOperationQueueStartedOperation:operation];
 }
 
-- (void)persistentOperationFinishedWithTimestamp:(NSUInteger)timestamp
+- (void)persistentOperationFinished:(BAPersistentOperation *)operation
 {
-  [self deleteOperationFromDatabaseWithTimestamp:timestamp];
+  [self deleteOperationFromDatabaseWithTimestamp:operation.timestamp];
 }
 
 #pragma mark - Database
@@ -172,15 +171,6 @@ static int cid = 0;
 }
 
 #pragma mark - Helpers
-
-- (BAPersistentOperation *)operationFromTimestamp:(NSUInteger)timestamp
-{
-  BAPersistentOperation *operation = [[_operationQueue.operations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(BAPersistentOperation *operation, NSDictionary *bindings) {
-    return (operation.timestamp == timestamp);
-  }]] firstObject];
-  
-  return operation;
-}
 
 - (NSString *)sqlForCreatingDBSchema
 {

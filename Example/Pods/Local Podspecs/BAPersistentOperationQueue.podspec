@@ -6,33 +6,22 @@
 #
 Pod::Spec.new do |s|
   s.name             = "BAPersistentOperationQueue"
-  s.version          = "0.1.0"
-  s.summary          = "A short description of BAPersistentOperationQueue."
+  s.version          = "1.0.0"
+  s.summary          = "A persistent operation queue that uses a database to save operations that need to be completed at a later time."
   s.description      = <<-DESC
-                       An optional longer description of BAPersistentOperationQueue
-
-                       * Markdown format.
-                       * Don't worry about the indent, we strip it!
+                       A FIFO queue that uses both a database and an in-memory queue to save operations that, for some reason, must be completed at a later time. The best use case (and the purpose of its existence!) is to allow POST/PUT/DELETE requests in an app to be saved and performed in their correct order at a later time, in case the network connection is unavailable. It uses an NSOperationQueue to automatically handle these operations in separate threads, and makes use of delegate methods to provide the host application “hooks” to serialize and deserialize objects for greater flexibility.
                        DESC
-  s.homepage         = "http://EXAMPLE/NAME"
-  s.screenshots      = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
+  s.homepage         = "http://inf0rmer.github.io/BAPersistentOperationQueue"
   s.license          = 'MIT'
   s.author           = { "Bruno Abrantes" => "inf0rmer.realm@gmail.com" }
-  s.source           = { :git => "http://EXAMPLE/NAME.git", :tag => s.version.to_s }
-  s.social_media_url = 'https://twitter.com/EXAMPLE'
+  s.source           = { :git => "https://github.com/inf0rmer/BAPersistentOperationQueue.git", :tag => s.version.to_s }
+  s.social_media_url = 'https://twitter.com/inf0rmer'
 
-  # s.platform     = :ios, '5.0'
-  # s.ios.deployment_target = '5.0'
-  # s.osx.deployment_target = '10.7'
+  s.platform     = :ios, '6.0'
   s.requires_arc = true
 
   s.source_files = 'BAPersistentOperationQueue/Classes/**/*'
-
-  s.ios.exclude_files = 'BAPersistentOperationQueue/Classes/osx'
-  s.osx.exclude_files = 'BAPersistentOperationQueue/Classes/ios'
   s.public_header_files = 'BAPersistentOperationQueue/Classes/**/*.h'
-  # s.frameworks = 'SomeFramework', 'AnotherFramework'
-  s.dependency 'ObjectiveSugar'
+
   s.dependency 'FMDB'
-  s.dependency 'KVOController'
 end

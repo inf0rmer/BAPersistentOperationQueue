@@ -10,12 +10,12 @@
 
 @implementation PersistentOperationDelegate
 
-- (void)persistentOperationStartedWithTimestamp:(NSUInteger)timestamp
+- (void)persistentOperationStarted:(BAPersistentOperation *)operation
 {
 
 }
 
-- (void)persistentOperationFinishedWithTimestamp:(NSUInteger)timestamp
+- (void)persistentOperationFinished:(BAPersistentOperation *)operation
 {
 
 }

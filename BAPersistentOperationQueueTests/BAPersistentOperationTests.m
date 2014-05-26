@@ -15,13 +15,14 @@ SPEC_BEGIN(BAPERSISTENTOPERATIONSPEC)
 describe(@"BAPersistentOperation", ^{
   __block BAPersistentOperation *operation;
   __block PersistentOperationDelegate *mockDelegate = [[PersistentOperationDelegate alloc] init];
+  
+  beforeEach(^{
+    operation = [[BAPersistentOperation alloc] initWithTimestamp:200
+                                                         andData:@{@"foo": @"bar"}];
+    operation.delegate = mockDelegate;
+  });
 
   describe(@"#initWithTimestamp:andData:", ^{
-    beforeEach(^{
-      operation = [[BAPersistentOperation alloc] initWithTimestamp:200
-                                                           andData:@{@"foo": @"bar"}];
-      operation.delegate = mockDelegate;
-    });
     
     it(@"sets #timestamp", ^{
       [[theValue(operation.timestamp) should] equal:theValue(200)];
@@ -62,17 +63,19 @@ describe(@"BAPersistentOperation", ^{
       [[theValue(operation.isExecuting) shouldNot] beTrue];
     });
   });
-
-  context(@"When an item finishes processing", ^{
-    beforeEach(^{
-      operation = [[BAPersistentOperation alloc] initWithTimestamp:200
-                                                           andData:@{@"foo": @"bar"}];
-      operation.delegate = mockDelegate;
+  
+  describe(@"#start", ^{    
+    it(@"calls persistentOperationStarted: on its delegate", ^{
+      [[mockDelegate shouldEventually] receive:@selector(persistentOperationStarted:)
+                                 withArguments:operation];
+      [operation start];
     });
-    
-    it(@"Calls the persistentOperationFinishedWithTimestamp: delegate method", ^{
-      [[mockDelegate shouldEventually] receive:@selector(persistentOperationFinishedWithTimestamp:)
-                withArguments:theValue(operation.timestamp)];
+  });
+
+  describe(@"#finish", ^{
+    it(@"Calls the persistentOperation: delegate method", ^{
+      [[mockDelegate shouldEventually] receive:@selector(persistentOperationFinished:)
+                                 withArguments:operation];
       
       [operation start];
       [operation finish];

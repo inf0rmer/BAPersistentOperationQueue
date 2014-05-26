@@ -168,7 +168,7 @@ describe(@"BAPersistentOperationQueue", ^{
     
     it(@"invokes the #persistentOperationQueueReceivedOperation delegate method with the next operation in line", ^{
       __block NSDictionary *returnedData = nil;
-      [mockDelegate stub:@selector(persistentOperationQueueReceivedOperation:) withBlock:^id(NSArray *params) {
+      [mockDelegate stub:@selector(persistentOperationQueueStartedOperation:) withBlock:^id(NSArray *params) {
         BAPersistentOperation *operation = [params firstObject];
         returnedData = operation.data;
 
@@ -181,7 +181,7 @@ describe(@"BAPersistentOperationQueue", ^{
     
     it(@"only starts working on the next operation when the previous one is finished", ^{
       __block NSDictionary *returnedData = nil;
-      [mockDelegate stub:@selector(persistentOperationQueueReceivedOperation:) withBlock:^id(NSArray *params) {
+      [mockDelegate stub:@selector(persistentOperationQueueStartedOperation:) withBlock:^id(NSArray *params) {
         BAPersistentOperation *operation = [params firstObject];
         
         if (operation.data == data) {
@@ -326,7 +326,7 @@ describe(@"BAPersistentOperationQueue", ^{
     it(@"tries deleting it from the database", ^{
       NSString *query = [NSString stringWithFormat:@"DELETE FROM %@ WHERE timestamp = ?", queue._id];
       [[dbMock shouldEventually] receive:@selector(executeUpdate:) withArguments:query];
-      [queue persistentOperationFinishedWithTimestamp:200];
+      [queue persistentOperationFinished:operation];
     });
   });
 });
