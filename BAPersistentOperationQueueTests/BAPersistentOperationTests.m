@@ -29,13 +29,19 @@ describe(@"BAPersistentOperation", ^{
     });
     
     context(@"when timestamp is nil", ^{
+      __block double timestamp;
       beforeEach(^{
-        operation = [[BAPersistentOperation alloc] initWithTimestamp:(NSInteger)nil
+        timestamp = (double)[[NSDate date] timeIntervalSince1970];
+        id dateMock = [NSDate mock];
+        
+        [NSDate stub:@selector(date) andReturn:dateMock];
+        [dateMock stub:@selector(timeIntervalSince1970) andReturn:theValue(timestamp)];
+        
+        operation = [[BAPersistentOperation alloc] initWithTimestamp:0
                                                              andData:@{@"foo": @"bar"}];
       });
       
       it(@"uses the current timestamp", ^{
-        NSInteger timestamp = (NSInteger)[[NSDate date] timeIntervalSince1970];
         [[theValue(operation.timestamp) should] equal:theValue(timestamp)];
       });
     });

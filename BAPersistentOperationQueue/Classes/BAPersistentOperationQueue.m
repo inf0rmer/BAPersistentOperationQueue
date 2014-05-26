@@ -67,8 +67,7 @@ static int cid = 0;
 {
   NSDictionary *data = [self.delegate persistentOperationQueueSerializeObject:object];
 
-  NSUInteger timestamp = (NSUInteger)[[NSDate date] timeIntervalSince1970];
-  BAPersistentOperation *operation = [[BAPersistentOperation alloc] initWithTimestamp:timestamp
+  BAPersistentOperation *operation = [[BAPersistentOperation alloc] initWithTimestamp:0
                                                                               andData:data];
   operation.delegate = self;
   [_operationQueue addOperation:operation];
@@ -123,18 +122,19 @@ static int cid = 0;
   }
   
   [_databaseQueue inDatabase:^(FMDatabase *db) {
-    NSUInteger count = [db intForQuery:[self sqlForCheckingIfOperationExists], [NSNumber numberWithInteger:operation.timestamp]];
+    NSString *timestamp = [NSString stringWithFormat:@"%f", operation.timestamp];
+    NSUInteger count = [db doubleForQuery:[self sqlForCheckingIfOperationExists], timestamp];
     
     if (count == 0 && [db open]) {
       NSString *data = [self JSONStringFromDictionary:operation.data];
-      NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:operation.timestamp], @"timestamp", data, @"data", nil];
+      NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:timestamp, @"timestamp", data, @"data", nil];
       [db executeUpdate:[self sqlForInsertingOperation] withParameterDictionary:args];
       [db close];
     }
   }];
 }
 
-- (void)deleteOperationFromDatabaseWithTimestamp:(NSUInteger)timestamp
+- (void)deleteOperationFromDatabaseWithTimestamp:(double)timestamp
 {
   if (_databaseQueue == nil || !timestamp) {
     return;
@@ -142,7 +142,7 @@ static int cid = 0;
   
   [_databaseQueue inDatabase:^(FMDatabase *db) {
     if ([db open]) {
-      [db executeUpdate:[self sqlForDeletingOperationWithTimestamp], [NSNumber numberWithInteger:timestamp]];
+      [db executeUpdate:[self sqlForDeletingOperationWithTimestamp], [NSString stringWithFormat:@"%f", timestamp]];
       [db close];
     }
   }];
@@ -160,7 +160,7 @@ static int cid = 0;
       FMResultSet *results = [db executeQuery:sql];
       
       while ([results next]) {
-        NSInteger timestamp = [results intForColumn:@"timestamp"];
+        double timestamp = [[results stringForColumn:@"timestamp"] doubleValue];
         NSString *json = [results stringForColumn:@"data"];
         NSData *jsonData = [json dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *data = [NSJSONSerialization JSONObjectWithData:jsonData
@@ -183,7 +183,7 @@ static int cid = 0;
 
 - (NSString *)sqlForCreatingDBSchema
 {
-  return [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (timestamp INTEGER PRIMARY KEY ASC, data TEXT);", __id];
+  return [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (timestamp TEXT PRIMARY KEY, data TEXT);", __id];
 }
 
 - (NSString *)sqlForInsertingOperation

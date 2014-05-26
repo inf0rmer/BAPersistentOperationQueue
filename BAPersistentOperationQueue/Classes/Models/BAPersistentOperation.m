@@ -12,7 +12,7 @@
 
 #pragma mark - Lifecycle
 
-- (instancetype)initWithTimestamp:(NSUInteger)timestamp
+- (instancetype)initWithTimestamp:(double)timestamp
                           andData:(NSDictionary *)data
 {
   if (self = [super init]) {
@@ -76,10 +76,10 @@
   _data = data;
 }
 
-- (void)setTimestamp:(NSUInteger)timestamp
+- (void)setTimestamp:(double)timestamp
 {
   if (!timestamp) {
-    timestamp = (NSInteger)[[NSDate date] timeIntervalSince1970];
+    timestamp = (double)[[NSDate date] timeIntervalSince1970];
   }
   
   _timestamp = timestamp;

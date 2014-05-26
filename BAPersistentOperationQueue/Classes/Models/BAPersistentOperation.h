@@ -33,7 +33,7 @@
  The UNIX timestamp for the operation.
  @warning This needs to be unique.
  */
-@property (nonatomic, assign) NSUInteger timestamp;
+@property (nonatomic, assign) double timestamp;
 
 /**
  The arbitrary serialized data to be stored in an operation.
@@ -73,7 +73,7 @@
  @warning If no `timestamp` is provided, the current date will be used to calculate it.
  @warning If no `data` is provided, an empty NSDictionary will be used.
  */
-- (instancetype)initWithTimestamp:(NSUInteger)timestamp
+- (instancetype)initWithTimestamp:(double)timestamp
                           andData:(NSDictionary *)data;
 
 #pragma mark - Control
