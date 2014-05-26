@@ -18,37 +18,55 @@
   if (self = [super init]) {
     self.timestamp = timestamp;
     self.data = data;
-    self.finished = NO;
+    
+    _isExecuting = NO;
+    _isFinished = NO;
   }
   
   return self;
 }
 
-- (void)main
+- (void)start
 {
-  @autoreleasepool {
-    if (self.isCancelled) {
-      return;
-    }
-    
-    [self.delegate persistentOperationStartedWithTimestamp:self.timestamp];
-    
-    if (self.isCancelled) {
-      return;
-    }
-    
-    while (_finished == NO) {
-      [NSThread sleepForTimeInterval:1.0];
-    }
-    
-    if (self.isCancelled) {
-      return;
-    }
-    
-    if (_finished) {
-      [self.delegate persistentOperationFinishedWithTimestamp:self.timestamp];
-    }
+  if (![NSThread isMainThread]) {
+    [self performSelectorOnMainThread:@selector(start)
+                           withObject:nil
+                        waitUntilDone:NO];
+    return;
   }
+  
+  [self willChangeValueForKey:@"isExecuting"];
+  _isExecuting = YES;
+  [self didChangeValueForKey:@"isExecuting"];
+  
+  [self.delegate persistentOperationStartedWithTimestamp:self.timestamp];
+}
+
+- (void)cancel {
+  [super cancel];
+  
+  [self willChangeValueForKey:@"isExecuting"];
+  [self willChangeValueForKey:@"isFinished"];
+  
+  _isExecuting = NO;
+  _isFinished = YES;
+  
+  [self didChangeValueForKey:@"isExecuting"];
+  [self didChangeValueForKey:@"isFinished"];
+}
+
+#pragma mark - Custom
+- (void)finish {
+  [self willChangeValueForKey:@"isExecuting"];
+  [self willChangeValueForKey:@"isFinished"];
+  
+  _isExecuting = NO;
+  _isFinished = YES;
+  
+  [self didChangeValueForKey:@"isExecuting"];
+  [self didChangeValueForKey:@"isFinished"];
+  
+  [self.delegate persistentOperationFinishedWithTimestamp:self.timestamp];
 }
 
 #pragma mark - Custom setters
@@ -58,7 +76,7 @@
     data = [[NSDictionary alloc] init];
   }
   
-  _data= data;
+  _data = data;
 }
 
 - (void)setTimestamp:(NSUInteger)timestamp
@@ -68,6 +86,13 @@
   }
   
   _timestamp = timestamp;
+}
+
+#pragma mark - Custom getters
+
+- (BOOL)isConcurrent
+{
+  return YES;
 }
 
 @end

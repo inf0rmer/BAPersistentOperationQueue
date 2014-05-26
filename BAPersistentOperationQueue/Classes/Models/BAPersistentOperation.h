@@ -19,12 +19,17 @@
 
 @property (nonatomic, assign) NSUInteger timestamp;
 @property (nonatomic, strong) NSDictionary *data;
-@property (nonatomic, assign) BOOL finished;
+
+@property (readwrite) BOOL isExecuting;
+@property (readwrite) BOOL isFinished;
 
 @property (nonatomic, weak) id <BAPersistentOperationDelegate> delegate;
 
 #pragma mark - Initialization
 - (instancetype)initWithTimestamp:(NSUInteger)timestamp
                           andData:(NSDictionary *)data;
+
+#pragma mark - Control
+- (void)finish;
 
 @end

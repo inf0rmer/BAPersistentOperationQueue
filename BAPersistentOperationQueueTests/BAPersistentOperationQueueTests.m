@@ -185,7 +185,7 @@ describe(@"BAPersistentOperationQueue", ^{
         BAPersistentOperation *operation = [params firstObject];
         
         if (operation.data == data) {
-          [operation setFinished:YES];
+          [operation finish];
         } else {
           returnedData = operation.data;
         }
