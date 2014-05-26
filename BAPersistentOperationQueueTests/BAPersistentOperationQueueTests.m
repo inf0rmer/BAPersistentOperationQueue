@@ -185,7 +185,7 @@ describe(@"BAPersistentOperationQueue", ^{
         BAPersistentOperation *operation = [params firstObject];
         
         if (operation.data == data) {
-          [operation setFinished:YES];
+          [operation finish];
         } else {
           returnedData = operation.data;
         }
@@ -294,6 +294,37 @@ describe(@"BAPersistentOperationQueue", ^{
       
       [queue startWorking];
       [queue flush];
+    });
+  });
+  
+  context(@"When an operation finishes", ^{
+    __block id dbMock = [FMDatabase nullMock];
+    __block BAPersistentOperation *operation;
+    beforeEach(^{
+      id databaseQueueMock = [FMDatabaseQueue mock];
+      
+      [FMDatabaseQueue stub:@selector(databaseQueueWithPath:) andReturn:databaseQueueMock];
+      
+      [databaseQueueMock stub:@selector(inDatabase:) withBlock:^id(NSArray *params) {
+        void (^block)(FMDatabase *db) = params[0];
+        block(dbMock);
+        
+        return nil;
+      }];
+      
+      [dbMock stub:@selector(executeUpdate:) andReturn:theValue(YES)];
+      [dbMock stub:@selector(executeQuery:) andReturn:nil];
+      
+      queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
+      
+      operation = [[BAPersistentOperation alloc] initWithTimestamp:200 andData:@{}];
+      [queue.operationQueue addOperation:operation];
+    });
+    
+    it(@"tries deleting it from the database", ^{
+      NSString *query = [NSString stringWithFormat:@"DELETE FROM %@ WHERE timestamp = ?", queue._id];
+      [[dbMock shouldEventually] receive:@selector(executeUpdate:) withArguments:query];
+      [queue persistentOperationFinishedWithTimestamp:200];
     });
   });
 });

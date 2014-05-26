@@ -8,16 +8,19 @@
 
 #import <Kiwi/Kiwi.h>
 #import "BAPersistentOperation.h"
+#import "PersistentOperationDelegate.h"
 
 SPEC_BEGIN(BAPERSISTENTOPERATIONSPEC)
 
 describe(@"BAPersistentOperation", ^{
+  __block BAPersistentOperation *operation;
+  __block PersistentOperationDelegate *mockDelegate = [[PersistentOperationDelegate alloc] init];
+
   describe(@"#initWithTimestamp:andData:", ^{
-    __block BAPersistentOperation *operation;
-    
     beforeEach(^{
       operation = [[BAPersistentOperation alloc] initWithTimestamp:200
                                                            andData:@{@"foo": @"bar"}];
+      operation.delegate = mockDelegate;
     });
     
     it(@"sets #timestamp", ^{
@@ -51,8 +54,28 @@ describe(@"BAPersistentOperation", ^{
       });
     });
     
-    it(@"sets #finished", ^{
-      [[theValue(operation.finished) shouldNot] beTrue];
+    it(@"sets #isFinished", ^{
+      [[theValue(operation.isFinished) shouldNot] beTrue];
+    });
+    
+    it(@"sets #isExecuting", ^{
+      [[theValue(operation.isExecuting) shouldNot] beTrue];
+    });
+  });
+
+  context(@"When an item finishes processing", ^{
+    beforeEach(^{
+      operation = [[BAPersistentOperation alloc] initWithTimestamp:200
+                                                           andData:@{@"foo": @"bar"}];
+      operation.delegate = mockDelegate;
+    });
+    
+    it(@"Calls the persistentOperationFinishedWithTimestamp: delegate method", ^{
+      [[mockDelegate shouldEventually] receive:@selector(persistentOperationFinishedWithTimestamp:)
+                withArguments:theValue(operation.timestamp)];
+      
+      [operation start];
+      [operation finish];
     });
   });
 });

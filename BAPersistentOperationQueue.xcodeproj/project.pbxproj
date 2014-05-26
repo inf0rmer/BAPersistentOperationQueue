@@ -19,6 +19,7 @@
 		139E2C9A192C120900DE1FD8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 139E2C98192C120900DE1FD8 /* InfoPlist.strings */; };
 		139E2C9C192C120900DE1FD8 /* BAPersistentOperationQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E2C9B192C120900DE1FD8 /* BAPersistentOperationQueueTests.m */; };
 		13A18913192D0715003F4B55 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 13A18912192D0715003F4B55 /* libsqlite3.dylib */; };
+		13F8E3E8193349A900A333B3 /* PersistentOperationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F8E3E7193349A900A333B3 /* PersistentOperationDelegate.m */; };
 		AE688CC62CAE4FC3B2045177 /* libPods-BAPersistentOperationQueueTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DBBCA0B9BF448D19AAF3D9C /* libPods-BAPersistentOperationQueueTests.a */; };
 		FF391934069F435C9C965456 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E546935A3804BA39E3CE50D /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -66,6 +67,8 @@
 		139E2C99192C120900DE1FD8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		139E2C9B192C120900DE1FD8 /* BAPersistentOperationQueueTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BAPersistentOperationQueueTests.m; sourceTree = "<group>"; };
 		13A18912192D0715003F4B55 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		13F8E3E6193349A900A333B3 /* PersistentOperationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistentOperationDelegate.h; sourceTree = "<group>"; };
+		13F8E3E7193349A900A333B3 /* PersistentOperationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentOperationDelegate.m; sourceTree = "<group>"; };
 		3C90455B3FE843338002223A /* Pods-BAPersistentOperationQueueTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BAPersistentOperationQueueTests.xcconfig"; path = "Pods/Pods-BAPersistentOperationQueueTests.xcconfig"; sourceTree = "<group>"; };
 		4E546935A3804BA39E3CE50D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DBBCA0B9BF448D19AAF3D9C /* libPods-BAPersistentOperationQueueTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BAPersistentOperationQueueTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -139,6 +142,8 @@
 			children = (
 				130AE069192D107A00650D88 /* PersistentOperationQueueDelegate.h */,
 				130AE06A192D107A00650D88 /* PersistentOperationQueueDelegate.m */,
+				13F8E3E6193349A900A333B3 /* PersistentOperationDelegate.h */,
+				13F8E3E7193349A900A333B3 /* PersistentOperationDelegate.m */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -372,6 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				130AE070192E6DD700650D88 /* BAPersistentOperationTests.m in Sources */,
+				13F8E3E8193349A900A333B3 /* PersistentOperationDelegate.m in Sources */,
 				139E2C9C192C120900DE1FD8 /* BAPersistentOperationQueueTests.m in Sources */,
 				130AE06B192D107A00650D88 /* PersistentOperationQueueDelegate.m in Sources */,
 			);
