@@ -20,20 +20,23 @@
   return self;
 }
 
-- (void)perform
+- (void)performWithBlock:(void (^)())completionBlock
 {
   self.performing = YES;
-  NSLog(@"Performing request with name %@", self.name);
   
-  // Simulating a network reques
+  // Simulating a network request
   dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     // Sleep for some time to simulate latency
-    [NSThread sleepForTimeInterval:[self getRandomNumberBetween:1 maxNumber:10]];
+    [NSThread sleepForTimeInterval:[self getRandomNumberBetween:1 maxNumber:5]];
     
     dispatch_async(dispatch_get_main_queue(), ^{
       
       self.finished = YES;
       self.performing = NO;
+      
+      if (completionBlock) {
+        completionBlock();
+      }
       
       if ([self.delegate respondsToSelector:@selector(BARequestDidFinish:)]) {
         [self.delegate BARequestDidFinish:self];

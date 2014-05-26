@@ -24,6 +24,6 @@
 @property (nonatomic, weak) id <BARequestDelegate> delegate;
 
 - (instancetype)initWithName:(NSString *)name;
-- (void)perform;
+- (void)performWithBlock:(void (^)())completionBlock;
 
 @end

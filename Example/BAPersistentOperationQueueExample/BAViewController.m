@@ -16,13 +16,24 @@
 
 @implementation BAViewController {
   NSMutableArray *requests;
+  BAPersistentOperationQueue *offlineQueue;
 }
 
 - (void)viewDidLoad
 {
   [super viewDidLoad];
 	
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *documentDirectory = [paths objectAtIndex:0];
+  NSString *dbPath = [documentDirectory stringByAppendingPathComponent:@"Requests.db"];
+  
+  offlineQueue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:dbPath];
+  offlineQueue.delegate = self;
+  
   _online = YES;
+  // We start online, so start the queue immediately
+  [offlineQueue startWorking];
+  
   requests = [[NSMutableArray alloc] init];
   [self updateStateButton];
 }
@@ -62,12 +73,52 @@
   return cell;
 }
 
+#pragma mark - BAPersistentOperationQueueDelegate
+
+- (NSDictionary *)persistentOperationQueueSerializeObject:(id)object {
+  // Serialize our request into an NSDictionary data structure
+  BARequest *request = (BARequest *)object;
+  NSDictionary *data = @{@"name": request.name};
+  return data;
+}
+
+- (void)persistentOperationQueueReceivedOperation:(BAPersistentOperation *)operation
+{
+  // Transform the operation back into a request if it's not already in the table.
+  // operation.data holds the previously serialized data structure
+  BARequest *request;
+  
+  for (BARequest *req in requests) {
+    if ([req.name isEqualToString:operation.data[@"name"]]) {
+      request = req;
+    }
+  }
+  
+  if (request == nil) {
+    request = [[BARequest alloc] initWithName:operation.data[@"name"]];
+    request.delegate = self;
+    [requests addObject:request];
+  }
+  
+  [request performWithBlock:^{
+    [operation finish];
+  }];
+  
+  [self.tableView reloadData];
+}
+
 #pragma mark - IBActions
 - (IBAction)switchState:(id)sender
 {
   _online = !_online;
   [self updateStateButton];
   [self.tableView reloadData];
+  
+  if (_online) {
+    [offlineQueue startWorking];
+  } else {
+    [offlineQueue stopWorking];
+  }
 }
 
 - (IBAction)addRequest:(id)sender
@@ -76,7 +127,10 @@
   request.delegate = self;
   
   if (_online) {
-    [request perform];
+    [request performWithBlock:nil];
+  } else {
+    // Add to our persistent queue
+    [offlineQueue insertObject:request];
   }
   
   [requests addObject:request];
@@ -92,7 +146,7 @@
 #pragma mark - Helpers
 - (void)updateStateButton
 {
-  if (_online) {
+  if (_online) {    
     self.stateButton.backgroundColor = [UIColor redColor];
     [self.stateButton setTitle:@"GO OFFLINE" forState:UIControlStateNormal];
   } else {

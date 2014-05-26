@@ -1,5 +1,15 @@
 PODS:
-  - BAPersistentOperationQueue (0.1.0)
+  - BAPersistentOperationQueue (0.1.0):
+    - FMDB
+    - KVOController
+    - ObjectiveSugar
+  - FMDB (2.3):
+    - FMDB/standard
+  - FMDB/common (2.3)
+  - FMDB/standard (2.3):
+    - FMDB/common
+  - KVOController (1.0.1)
+  - ObjectiveSugar (1.1.0)
 
 DEPENDENCIES:
   - BAPersistentOperationQueue (from `../`)
@@ -9,6 +19,9 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  BAPersistentOperationQueue: a759ce0d4ba66f8a1a9a964b36afacb76189396d
+  BAPersistentOperationQueue: 862fa9fa8e2d3be1153e8cff46ed5cb6420dca71
+  FMDB: 31ec26773c7f7b7890a6038235a1f2bbd933a7cb
+  KVOController: e6ad4a058ab0ceed546802361adb89d322a22cf2
+  ObjectiveSugar: f48793f5902c77cfc02a4ce46d2e8ecddcad4dc2
 
 COCOAPODS: 0.33.1
