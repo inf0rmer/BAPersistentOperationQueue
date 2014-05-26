@@ -6,7 +6,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = "BAPersistentOperationQueue"
-  s.version          = "1.0.0"
+  s.version          = "1.0.1"
   s.summary          = "A persistent operation queue that uses a database to save operations that need to be completed at a later time."
   s.description      = <<-DESC
                        A FIFO queue that uses both a database and an in-memory queue to save operations that, for some reason, must be completed at a later time. The best use case (and the purpose of its existence!) is to allow POST/PUT/DELETE requests in an app to be saved and performed in their correct order at a later time, in case the network connection is unavailable. It uses an NSOperationQueue to automatically handle these operations in separate threads, and makes use of delegate methods to provide the host application “hooks” to serialize and deserialize objects for greater flexibility.
