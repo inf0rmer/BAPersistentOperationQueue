@@ -216,8 +216,25 @@ describe(@"BAPersistentOperationQueue", ^{
   });
   
   describe(@"flush", ^{
+    __block id dbMock = [FMDatabase nullMock];
+    
     beforeEach(^{
-      queue = [[BAPersistentOperationQueue alloc] init];
+      id databaseQueueMock = [FMDatabaseQueue mock];
+      
+      [FMDatabaseQueue stub:@selector(databaseQueueWithPath:) andReturn:databaseQueueMock];
+      
+      [databaseQueueMock stub:@selector(inDatabase:) withBlock:^id(NSArray *params) {
+        void (^block)(FMDatabase *db) = params[0];
+        block(dbMock);
+        
+        return nil;
+      }];
+      
+      [dbMock stub:@selector(executeUpdate:) andReturn:theValue(YES)];
+      [dbMock stub:@selector(open) andReturn:theValue(YES)];
+      
+      queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
+      
       [queue addObject:@{}];
       [queue addObject:@{}];
       [queue addObject:@{}];
@@ -228,6 +245,13 @@ describe(@"BAPersistentOperationQueue", ^{
     it(@"clears the queue", ^{
       [queue flush];
       [[expectFutureValue(theValue([queue.operations count])) shouldEventually] equal:theValue(0)];
+    });
+    
+    it(@"deletes every entry in the database", ^{
+      NSString *query = [NSString stringWithFormat:@"DELETE FROM %@", queue._id];
+      [[dbMock shouldEventually] receive:@selector(executeUpdate:) withArguments:query];
+      
+      [queue flush];
     });
   });
   

@@ -93,6 +93,15 @@ static int cid = 0;
 - (void)flush
 {
   [_operationQueue cancelAllOperations];
+  
+  if (_databaseQueue != nil) {
+    [_databaseQueue inDatabase:^(FMDatabase *db) {
+      if ([db open]) {
+        [db executeUpdate:[self sqlForDeletingAllOperations]];
+        [db close];
+      }
+    }];
+  }
 }
 
 #pragma mark - BAPersistentOperationDelegate
@@ -195,6 +204,11 @@ static int cid = 0;
 - (NSString *)sqlForDeletingOperationWithTimestamp
 {
   return [NSString stringWithFormat:@"DELETE FROM %@ WHERE timestamp = ?", __id];
+}
+
+- (NSString *)sqlForDeletingAllOperations
+{
+  return [NSString stringWithFormat:@"DELETE FROM %@", __id];
 }
 
 - (NSString *)JSONStringFromDictionary:(NSDictionary *)dictionary

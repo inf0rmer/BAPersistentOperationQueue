@@ -48,10 +48,8 @@
 
 /* Begin PBXFileReference section */
 		116505AB30F5437795C1467E /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
-		130AE061192D106100650D88 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		130AE063192D106100650D88 /* BAPersistentOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAPersistentOperation.h; sourceTree = "<group>"; };
 		130AE064192D106100650D88 /* BAPersistentOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BAPersistentOperation.m; sourceTree = "<group>"; };
-		130AE066192D106100650D88 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		130AE069192D107A00650D88 /* PersistentOperationQueueDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistentOperationQueueDelegate.h; sourceTree = "<group>"; };
 		130AE06A192D107A00650D88 /* PersistentOperationQueueDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentOperationQueueDelegate.m; sourceTree = "<group>"; };
 		130AE06C192D10B200650D88 /* BAPersistentOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAPersistentOperationQueue.h; sourceTree = "<group>"; };
@@ -105,19 +103,9 @@
 			children = (
 				130AE06C192D10B200650D88 /* BAPersistentOperationQueue.h */,
 				130AE06D192D10B200650D88 /* BAPersistentOperationQueue.m */,
-				130AE060192D106100650D88 /* ios */,
 				130AE062192D106100650D88 /* Models */,
-				130AE065192D106100650D88 /* osx */,
 			);
 			path = Classes;
-			sourceTree = "<group>";
-		};
-		130AE060192D106100650D88 /* ios */ = {
-			isa = PBXGroup;
-			children = (
-				130AE061192D106100650D88 /* .gitkeep */,
-			);
-			path = ios;
 			sourceTree = "<group>";
 		};
 		130AE062192D106100650D88 /* Models */ = {
@@ -127,14 +115,6 @@
 				130AE064192D106100650D88 /* BAPersistentOperation.m */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		130AE065192D106100650D88 /* osx */ = {
-			isa = PBXGroup;
-			children = (
-				130AE066192D106100650D88 /* .gitkeep */,
-			);
-			path = osx;
 			sourceTree = "<group>";
 		};
 		130AE068192D107A00650D88 /* Mocks */ = {
