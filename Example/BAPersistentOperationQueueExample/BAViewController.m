@@ -130,7 +130,7 @@
     [request performWithBlock:nil];
   } else {
     // Add to our persistent queue
-    [offlineQueue insertObject:request];
+    [offlineQueue addObject:request];
   }
   
   [requests addObject:request];
