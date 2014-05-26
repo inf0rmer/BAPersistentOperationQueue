@@ -104,7 +104,7 @@
 /**
  Cancels all operations in the queue.
  
- @warning This removes all operations from the queue, thereby deleting them.
+ @warning This removes all operations from the queue and the database, thereby deleting them.
  */
 - (void)flush;
 
