@@ -17,6 +17,7 @@ The project consists of a simple table view that allows you to create "Requests"
 There is also a button to make your app go "online" and "offline". When "offline", any new requests added start in a "Stopped" state. When you either go "online" or restart the application, these Requests are inserted into a queue and then performed one at a time.
 
 ## Requirements
+[FMDB](https://github.com/ccgus/fmdb)
 
 ## Installation
 
