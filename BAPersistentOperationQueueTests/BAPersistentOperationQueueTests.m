@@ -10,6 +10,7 @@
 #import <ObjectiveSugar/ObjectiveSugar.h>
 #import <FMDB/FMDatabaseQueue.h>
 #import <FMDB/FMDatabase.h>
+#import <FMDB/FMDatabaseAdditions.h>
 #import "BAPersistentOperationQueue.h"
 #import "PersistentOperationQueueDelegate.h"
 
@@ -72,7 +73,7 @@ describe(@"BAPersistentOperationQueue", ^{
     });
   });
   
-  describe(@"#insertObject", ^{
+  describe(@"#addObject", ^{
     __block BAPersistentOperationQueue *queue = nil;
     __block id dbMock = [FMDatabase nullMock];
     
@@ -88,11 +89,10 @@ describe(@"BAPersistentOperationQueue", ^{
         return nil;
       }];
       
-      FMResultSet *resultSet = [[FMResultSet alloc] init];
-      [resultSet stub:@selector(next) andReturn:theValue(YES)];
-      
       [dbMock stub:@selector(executeUpdate:) andReturn:theValue(YES)];
-      [dbMock stub:@selector(executeQuery:) andReturn:resultSet];
+      [dbMock stub:@selector(executeUpdate:withParameterDictionary:) andReturn:theValue(YES)];
+      [dbMock stub:@selector(intForQuery:) andReturn:theValue(0)];
+      [dbMock stub:@selector(open) andReturn:theValue(YES)];
       
       queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
       queue.delegate = mockDelegate;
@@ -103,13 +103,13 @@ describe(@"BAPersistentOperationQueue", ^{
       [[mockDelegate should] receive:@selector(persistentOperationQueueSerializeObject:)
                          withArguments:object];
       
-      [queue insertObject:object];
+      [queue addObject:object];
     });
     
     it(@"inserts the object in the database", ^{
       NSString *insertStatement = [NSString stringWithFormat:@"INSERT INTO %@ VALUES (:timestamp, :data)", queue._id];
-      [[dbMock should] receive:@selector(executeUpdate:) withArguments:insertStatement];
-      [queue insertObject:@{}];
+      [[dbMock should] receive:@selector(executeUpdate:withParameterDictionary:) withArguments:insertStatement, any()];
+      [queue addObject:@{}];
     });
     
     context(@"When the object is already in the database", ^{
@@ -152,8 +152,8 @@ describe(@"BAPersistentOperationQueue", ^{
     __block NSDictionary *data = @{@"foo": @"bar"};
     __block NSDictionary *data2 = @{@"foo2": @"bar2"};
     beforeEach(^{
-      [queue insertObject:data];
-      [queue insertObject:data2];
+      [queue addObject:data];
+      [queue addObject:data2];
     });
     
     afterEach(^{
@@ -218,10 +218,10 @@ describe(@"BAPersistentOperationQueue", ^{
   describe(@"flush", ^{
     beforeEach(^{
       queue = [[BAPersistentOperationQueue alloc] init];
-      [queue insertObject:@{}];
-      [queue insertObject:@{}];
-      [queue insertObject:@{}];
-      [queue insertObject:@{}];
+      [queue addObject:@{}];
+      [queue addObject:@{}];
+      [queue addObject:@{}];
+      [queue addObject:@{}];
       [queue startWorking];
     });
     
@@ -259,6 +259,7 @@ describe(@"BAPersistentOperationQueue", ^{
       
       [dbMock stub:@selector(executeUpdate:) andReturn:theValue(YES)];
       [dbMock stub:@selector(executeQuery:) andReturn:resultSet];
+      [dbMock stub:@selector(open) andReturn:theValue(YES)];
       
       queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
       [queue.operationQueue stub:@selector(operationCount) andReturn:theValue(1)];

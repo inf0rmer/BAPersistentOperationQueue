@@ -28,18 +28,13 @@
 
 - (void)start
 {
-  if (![NSThread isMainThread]) {
-    [self performSelectorOnMainThread:@selector(start)
-                           withObject:nil
-                        waitUntilDone:NO];
-    return;
-  }
-  
   [self willChangeValueForKey:@"isExecuting"];
   _isExecuting = YES;
   [self didChangeValueForKey:@"isExecuting"];
   
-  [self.delegate persistentOperationStartedWithTimestamp:self.timestamp];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self.delegate persistentOperationStartedWithTimestamp:self.timestamp];
+  });
 }
 
 - (void)cancel {
@@ -66,7 +61,9 @@
   [self didChangeValueForKey:@"isExecuting"];
   [self didChangeValueForKey:@"isFinished"];
   
-  [self.delegate persistentOperationFinishedWithTimestamp:self.timestamp];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self.delegate persistentOperationFinishedWithTimestamp:self.timestamp];
+  });
 }
 
 #pragma mark - Custom setters
