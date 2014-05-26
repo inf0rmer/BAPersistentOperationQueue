@@ -315,6 +315,7 @@ describe(@"BAPersistentOperationQueue", ^{
       
       [dbMock stub:@selector(executeUpdate:) andReturn:theValue(YES)];
       [dbMock stub:@selector(executeQuery:) andReturn:nil];
+      [dbMock stub:@selector(open) andReturn:theValue(YES)];
       
       queue = [[BAPersistentOperationQueue alloc] initWithDatabasePath:databasePath];
       
