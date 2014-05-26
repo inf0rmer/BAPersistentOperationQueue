@@ -30,7 +30,7 @@
 - (NSArray *)operations;
 
 #pragma mark - Queue management
-- (void)insertObject:(id)object;
+- (void)addObject:(id)object;
 - (void)startWorking;
 - (void)stopWorking;
 - (void)flush;

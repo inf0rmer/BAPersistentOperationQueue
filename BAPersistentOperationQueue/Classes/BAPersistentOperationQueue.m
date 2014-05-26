@@ -9,8 +9,7 @@
 #import "BAPersistentOperationQueue.h"
 #import <FMDB/FMDatabaseQueue.h>
 #import <FMDB/FMDatabase.h>
-#import <ObjectiveSugar/ObjectiveSugar.h>
-#import <KVOController/FBKVOController.h>
+#import <FMDB/FMDatabaseAdditions.h>
 
 @interface BAPersistentOperationQueue ()
 
@@ -21,9 +20,7 @@
 
 static int cid = 0;
 
-@implementation BAPersistentOperationQueue {
-  FBKVOController *_KVOController;
-}
+@implementation BAPersistentOperationQueue
 
 #pragma mark - Initialization
 
@@ -53,10 +50,8 @@ static int cid = 0;
     [_databaseQueue inDatabase:^(FMDatabase *db) {
       BOOL succeeded = [db executeUpdate:[self sqlForCreatingDBSchema]];
       NSAssert(succeeded, ([NSString stringWithFormat:@"Failed to create a storage table for %@", __id]));
+      [db close];
     }];
-    
-    // Setup KVO
-    [self setupKVO];
   }
   
   return self;
@@ -68,7 +63,7 @@ static int cid = 0;
 }
 
 #pragma mark - Queue management
-- (void)insertObject:(id)object
+- (void)addObject:(id)object
 {
   NSDictionary *data = [self.delegate persistentOperationQueueSerializeObject:object];
 
@@ -77,6 +72,8 @@ static int cid = 0;
                                                                               andData:data];
   operation.delegate = self;
   [_operationQueue addOperation:operation];
+  
+  [self insertOperationInDatabase:operation];
 }
 
 - (void)startWorking
@@ -119,12 +116,13 @@ static int cid = 0;
   }
   
   [_databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *s = [db executeQuery:[self sqlForCheckingIfOperationExists], operation.timestamp];
+    NSUInteger count = [db intForQuery:[self sqlForCheckingIfOperationExists], [NSNumber numberWithInteger:operation.timestamp]];
     
-    if ([s next]) {
+    if (count == 0 && [db open]) {
       NSString *data = [self JSONStringFromDictionary:operation.data];
       NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:operation.timestamp], @"timestamp", data, @"data", nil];
-      [db executeUpdate:[self sqlForInsertingOperation], args];
+      [db executeUpdate:[self sqlForInsertingOperation] withParameterDictionary:args];
+      [db close];
     }
   }];
 }
@@ -138,6 +136,8 @@ static int cid = 0;
   [_databaseQueue inDatabase:^(FMDatabase *db) {
     NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:operation.timestamp], @"timestamp", nil];
     [db executeUpdate:[self sqlForDeletingOperationWithTimestamp], args];
+    
+    [db close];
   }];
 }
 
@@ -148,49 +148,37 @@ static int cid = 0;
   }
   
   [_databaseQueue inDatabase:^(FMDatabase *db) {
-    NSString *sql = [self sqlForFetchOperation];
-    FMResultSet *results = [db executeQuery:sql];
-    
-    while ([results next]) {
-      NSInteger timestamp = [results intForColumn:@"timestamp"];
-      NSString *json = [results stringForColumn:@"data"];
-      NSData *jsonData = [json dataUsingEncoding:NSUTF8StringEncoding];
-      NSDictionary *data = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                           options:0
-                                                             error:nil];
+    if ([db open]) {
+      NSString *sql = [self sqlForFetchOperation];
+      FMResultSet *results = [db executeQuery:sql];
       
-      BAPersistentOperation *operation = [[BAPersistentOperation alloc] initWithTimestamp:timestamp
-                                                                                  andData:data];
+      while ([results next]) {
+        NSInteger timestamp = [results intForColumn:@"timestamp"];
+        NSString *json = [results stringForColumn:@"data"];
+        NSData *jsonData = [json dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *data = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                             options:0
+                                                               error:nil];
+        
+        BAPersistentOperation *operation = [[BAPersistentOperation alloc] initWithTimestamp:timestamp
+                                                                                    andData:data];
+        operation.delegate = self;
+        
+        [self.operationQueue addOperation:operation];
+      }
       
-      [_operationQueue addOperation:operation];
+      [db close];
     }
   }];
 }
 
 #pragma mark - Helpers
-- (void)setupKVO
-{
-  _KVOController = [FBKVOController controllerWithObserver:self];
-  
-  [_KVOController observe:_operationQueue keyPath:@"operations" options:NSKeyValueObservingOptionNew
-                    block:^(id observer, id object, NSDictionary *change) {
-                      if ([_operationQueue operationCount] == 0) {
-                        [self loadOperationsFromDatabase];
-                      }
-                      
-                      BAPersistentOperation *operation = (BAPersistentOperation *)[change[NSKeyValueChangeNewKey] firstObject];
-                      
-                      if (operation) {
-                        [self insertOperationInDatabase:operation];
-                      }
-                    }];
-}
 
 - (BAPersistentOperation *)operationFromTimestamp:(NSUInteger)timestamp
 {
-  BAPersistentOperation *operation = [[_operationQueue.operations select:^BOOL(BAPersistentOperation *operation) {
+  BAPersistentOperation *operation = [[_operationQueue.operations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(BAPersistentOperation *operation, NSDictionary *bindings) {
     return (operation.timestamp == timestamp);
-  }] firstObject];
+  }]] firstObject];
   
   return operation;
 }
@@ -227,7 +215,7 @@ static int cid = 0;
                                                      options:0
                                                        error:&error];
   
-  unless(jsonData) {
+  if(!jsonData) {
     return @"{}";
   } else {
     return [[NSString alloc] initWithData:jsonData
