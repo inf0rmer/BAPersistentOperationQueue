@@ -7,37 +7,38 @@
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
+    <script src="javascripts/main.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
   </head>
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/inf0rmer/BAPersistentOperationQueue">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/inf0rmer/BAPersistentOperationQueue/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/inf0rmer/BAPersistentOperationQueue/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
+
+      <header>
+        <h1>BAPersistentOperationQueue</h1>
+        <p>A persistent operation queue that uses a database to save operations that need to be completed at a later time.</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/inf0rmer/BAPersistentOperationQueue" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/inf0rmer/BAPersistentOperationQueue/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/inf0rmer/BAPersistentOperationQueue/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
 
     <div class="wrapper">
-
+      <nav>
+        <ul></ul>
+      </nav>
       <section>
-        <div id="title">
-          <h1>BAPersistentOperationQueue</h1>
-          <p>A persistent operation queue that uses a database to save operations that need to be completed at a later time.</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/inf0rmer">inf0rmer</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
-        </div>
-
         <h1>
 <a name="bapersistentoperationqueue" class="anchor" href="#bapersistentoperationqueue"><span class="octicon octicon-link"></span></a>BAPersistentOperationQueue</h1>
 
@@ -46,10 +47,16 @@
 <p><a href="http://cocoadocs.org/docsets/BAPersistentOperationQueue"><img src="http://cocoapod-badges.herokuapp.com/v/BAPersistentOperationQueue/badge.png" alt="Version"></a>
 <a href="http://cocoadocs.org/docsets/BAPersistentOperationQueue"><img src="http://cocoapod-badges.herokuapp.com/p/BAPersistentOperationQueue/badge.png" alt="Platform"></a></p>
 
-<h2>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+<p>BAPersistentOperation employs a FIFO queue that uses both a database and an in-memory queue to save operations that, for some reason, must be completed at a later time. The best use case (and the purpose of its existence!) is to allow POST/PUT/DELETE requests in an app to be saved and performed in their correct order at a later time, in case the network connection is unavailable. It uses an NSOperationQueue to automatically handle these operations in separate threads, and makes use of delegate methods to provide the host application “hooks” to serialize and deserialize objects for greater flexibility.</p>
 
-<p>To run the example project; clone the repo, and run <code>pod install</code> from the Example directory first.</p>
+<p>Its only dependency is <a href="https://github.com/ccgus/fmdb">FMDB</a>.</p>
+
+<h2>
+<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h2>
+
+<p>To run the example project; clone the repo, and run <code>pod install</code> from the Example directory first.
+The project consists of a simple table view that allows you to create "Requests", which are mock asynchronous operations that have a random amount of latency before they finish.
+There is also a button to make your app go "online" and "offline". When "offline", any new requests added start in a "Stopped" state. When you either go "online" or restart the application, these Requests are inserted into a queue and then performed one at a time.</p>
 
 <h2>
 <a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
@@ -64,16 +71,52 @@ it simply add the following line to your Podfile:</p>
 </code></pre>
 
 <h2>
-<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h2>
+<a name="how-to-use" class="anchor" href="#how-to-use"><span class="octicon octicon-link"></span></a>How to use</h2>
 
-<p>Bruno Abrantes, <a href="mailto:inf0rmer.realm@gmail.com">inf0rmer.realm@gmail.com</a></p>
+<p>Full documentation is available through <a href="http://cocoadocs.org/docsets/BAPersistentOperationQueue">CocoaDocs</a>, but here are the highlights:</p>
+
+<h3>
+<a name="the-queue" class="anchor" href="#the-queue"><span class="octicon octicon-link"></span></a>The queue</h3>
+
+<h4>
+<a name="startworking" class="anchor" href="#startworking"><span class="octicon octicon-link"></span></a>startWorking</h4>
+
+<p>Starts processing operations in the queue. If the queue has no operations in memory, it will try to load more from the database.</p>
+
+<h4>
+<a name="stopworking" class="anchor" href="#stopworking"><span class="octicon octicon-link"></span></a>stopWorking</h4>
+
+<p>Stops processing operations in the queue.</p>
+
+<h4>
+<a name="loadoperationsfromdatabase" class="anchor" href="#loadoperationsfromdatabase"><span class="octicon octicon-link"></span></a>loadOperationsFromDatabase</h4>
+
+<p>Loads operations from the database into the memory queue.</p>
+
+<h3>
+<a name="the-bapersistentoperationqueue-delegate" class="anchor" href="#the-bapersistentoperationqueue-delegate"><span class="octicon octicon-link"></span></a>The BAPersistentOperationQueue Delegate</h3>
+
+<p>The class where you'll use the queue can (and probably should) conform to this protocol.</p>
+
+<h4>
+<a name="persistentoperationqueueserializeobject" class="anchor" href="#persistentoperationqueueserializeobject"><span class="octicon octicon-link"></span></a>persistentOperationQueueSerializeObject:</h4>
+
+<p>This hook gives you the chance to serialize your custom objects into the queue. You should return an <code>NSDcitionary</code> with arbitrary data that you want to save. This data will later be used to reconstruct your object.</p>
+
+<h4>
+<a name="persistentoperationqueuestartedoperation" class="anchor" href="#persistentoperationqueuestartedoperation"><span class="octicon octicon-link"></span></a>persistentOperationQueueStartedOperation:</h4>
+
+<p>This hook is triggered when an operation begins processing. You are then able to use the operation's <code>data</code> property to reconstruct your original object. You are also responsible for finishing the operation in this delegate, by calling <code>[operation finish]</code>.</p>
 
 <h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>BAPersistentOperationQueue is available under the MIT license. See the LICENSE file for more info.</p>
       </section>
-
+      <footer>
+        <p>Project maintained by <a href="https://github.com/inf0rmer">inf0rmer</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
