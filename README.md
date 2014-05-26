@@ -45,7 +45,7 @@ Loads operations from the database into the memory queue.
 The class where you'll use the queue can (and probably should) conform to this protocol.
 
 #### persistentOperationQueueSerializeObject:
-This hook gives you the chance to serialize your custom objects into the queue. You should return an ```NSDcitionary``` with arbitrary data that you want to save. This data will later be used to reconstruct your object.
+This hook gives you the chance to serialize your custom objects into the queue. You should return an ```NSDictionary``` with arbitrary data that you want to save. This data will later be used to reconstruct your object.
 
 #### persistentOperationQueueStartedOperation:
 This hook is triggered when an operation begins processing. You are then able to use the operation's ```data``` property to reconstruct your original object. You are also responsible for finishing the operation in this delegate, by calling ```[operation finish]```.
