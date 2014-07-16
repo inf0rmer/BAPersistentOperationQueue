@@ -2,9 +2,11 @@
 
 A persistent operation queue that uses a database to save operations that need to be completed at a later time.
 
-[![Build Status](https://travis-ci.org/inf0rmer/BAPersistentOperationQueue.svg?branch=master)](https://travis-ci.org/inf0rmer/BAPersistentOperationQueue)
-[![Version](http://cocoapod-badges.herokuapp.com/v/BAPersistentOperationQueue/badge.png)](http://cocoadocs.org/docsets/BAPersistentOperationQueue)
-[![Platform](http://cocoapod-badges.herokuapp.com/p/BAPersistentOperationQueue/badge.png)](http://cocoadocs.org/docsets/BAPersistentOperationQueue)
+[![Build Status](http://img.shields.io/travis/inf0rmer/BAPersistentOperationQueue.svg?style=flat)](https://travis-ci.org/inf0rmer/BAPersistentOperationQueue)
+[![Coverage Status](https://img.shields.io/coveralls/inf0rmer/BAPersistentOperationQueue.svg?style=flat)](https://coveralls.io/r/inf0rmer/BAPersistentOperationQueue)
+[![Pod Version](http://img.shields.io/cocoapods/v/BAPersistentOperationQueue.svg?style=flat)](http://cocoadocs.org/docsets/BAPersistentOperationQueue/)
+[![Pod Platform](http://img.shields.io/cocoapods/p/BAPersistentOperationQueue.svg?style=flat)](http://cocoadocs.org/docsets/BAPersistentOperationQueue/)
+[![Pod License](http://img.shields.io/cocoapods/l/BAPersistentOperationQueue.svg?style=flat)](http://opensource.org/licenses/MIT)
 
 BAPersistentOperation employs a FIFO queue that uses both a database and an in-memory queue to save operations that, for some reason, must be completed at a later time. The best use case (and the purpose of its existence!) is to allow POST/PUT/DELETE requests in an app to be saved and performed in their correct order at a later time, in case the network connection is unavailable. It uses an NSOperationQueue to automatically handle these operations in separate threads, and makes use of delegate methods to provide the host application “hooks” to serialize and deserialize objects for greater flexibility.
 
