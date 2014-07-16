@@ -1,11 +1,15 @@
 language: objective-c
 before_install:
+  - sudo easy_install pyyaml cpp-coveralls
+  - export LANG=en_US.UTF-8
   - brew update
   - brew unlink xctool
   - brew install xctool
   - gem install cocoapods
 script:
-  - xctool -workspace BAPersistentOperationQueue.xcworkspace -scheme BAPersistentOperationQueue -sdk iphonesimulator test
+  - xctool -workspace BAPersistentOperationQueue.xcworkspace -scheme BAPersistentOperationQueue -sdk iphonesimulator test ONLY_ACTIVE_ARCH=NO GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
+after_success:
+  - ./scripts/coveralls.rb --extension m --exclude-folder Pods --exclude-folder BAPersistentOperationQueueTests
 branches:
   only:
     - master
